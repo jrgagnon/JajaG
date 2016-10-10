@@ -8,6 +8,7 @@ import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JComponent;
 
@@ -22,7 +23,7 @@ public class DrawArea extends JComponent
 { 
 
 	//image were going to draw 
-	private Image image;
+	private BufferedImage image;
 	// used to draw on
 	private Graphics2D g2;
 	//Mouse coordinates
@@ -70,7 +71,7 @@ public class DrawArea extends JComponent
 		if(image == null)
 		{
 			//image to draw null => create
-			image = createImage(getSize().width, getSize().height);
+			image = (BufferedImage) createImage(getSize().width, getSize().height);
 			g2 = (Graphics2D) image.getGraphics();
 			//enable 
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
