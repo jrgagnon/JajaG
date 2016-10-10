@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 public class SwingPaint
 {
 
-	JButton clearBtn, redBtn, blackBtn, magentaBtn, blueBtn, greenBtn, yellowBtn, grayBtn, orangeBtn;
+	JButton clearBtn, redBtn, blackBtn, magentaBtn, blueBtn, greenBtn, yellowBtn, grayBtn, orangeBtn, drawLineBtn, rectBtn, circleBtn, eraserBtn;
 	DrawArea drawArea;
 	ActionListener actionListener = new ActionListener()
 	{
@@ -45,7 +45,25 @@ public class SwingPaint
 			}else if(e.getSource() == orangeBtn)
 			{
 				drawArea.orange();
+			}else if(e.getSource() == drawLineBtn)
+			{
+				drawArea.tool = 0;
+				//Call button change to draw line
+			}else if(e.getSource() == rectBtn)
+			{
+				drawArea.tool = 1;
+				//Call button change to rectangle
+			}else if(e.getSource() == circleBtn)
+			{
+				drawArea.tool = 2;
+				//Call button change to circle
+			}else if(e.getSource() == eraserBtn)
+			{
+				drawArea.tool = 3;
+				//Call button change to eraser
 			}
+			
+			
 		}		
 	};
 	
@@ -69,6 +87,7 @@ public class SwingPaint
 		JPanel controls = new JPanel();
 		JPanel colors = new JPanel();
 		 
+		//Color Buttons
 		clearBtn = new JButton("Clear");
 		clearBtn.addActionListener(actionListener);
 		blackBtn = new JButton("Black");
@@ -88,8 +107,24 @@ public class SwingPaint
 		orangeBtn = new JButton("Orange");
 		orangeBtn.addActionListener(actionListener);
 		
+		//Tool Buttons
+		drawLineBtn = new JButton("Line");
+		drawLineBtn.addActionListener(actionListener);
+		rectBtn = new JButton("Rect");
+		rectBtn.addActionListener(actionListener);
+		circleBtn = new JButton("Circle");
+		circleBtn.addActionListener(actionListener);
+		eraserBtn = new JButton("Eraser");
+		eraserBtn.addActionListener(actionListener);
+		
 		//add controls to panel
 		controls.add(clearBtn);
+		
+		//add tools to the control panel
+		controls.add(drawLineBtn);
+		controls.add(rectBtn);
+		controls.add(circleBtn);
+		controls.add(eraserBtn);
 		
 		//add colors to panel
 		colors.add(blackBtn);
