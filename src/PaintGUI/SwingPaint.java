@@ -67,6 +67,7 @@ public class SwingPaint
 		content.add(drawArea, BorderLayout.CENTER);
 		//create controls to apply colors and call clear feature
 		JPanel controls = new JPanel();
+		JPanel colors = new JPanel();
 		 
 		clearBtn = new JButton("Clear");
 		clearBtn.addActionListener(actionListener);
@@ -87,21 +88,25 @@ public class SwingPaint
 		orangeBtn = new JButton("Orange");
 		orangeBtn.addActionListener(actionListener);
 		
-		//add to panel
+		//add controls to panel
 		controls.add(clearBtn);
-		controls.add(blackBtn);
-		controls.add(redBtn);
-		controls.add(magentaBtn);
-		controls.add(blueBtn);
-		controls.add(greenBtn);
-		controls.add(yellowBtn);
-		controls.add(grayBtn);
-		controls.add(orangeBtn);
+		
+		//add colors to panel
+		colors.add(blackBtn);
+		colors.add(redBtn);
+		colors.add(magentaBtn);
+		colors.add(blueBtn);
+		colors.add(greenBtn);
+		colors.add(yellowBtn);
+		colors.add(grayBtn);
+		colors.add(orangeBtn);
+		
 		
 		//add to content pane
 		content.add(controls, BorderLayout.NORTH);
+		content.add(colors, BorderLayout.SOUTH);
 		
-		frame.setSize(600, 600);
+		frame.setSize(800, 800);
 		frame.setLocationRelativeTo(null);
 		// can close frame
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
