@@ -3,7 +3,6 @@ package PaintGUI;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -18,6 +17,7 @@ import javax.swing.JComponent;
  * @author Andrew Fox
  *
  */
+@SuppressWarnings("serial")
 public class DrawArea extends JComponent {
 
 	// image were going to draw
@@ -33,7 +33,7 @@ public class DrawArea extends JComponent {
 	public int tool = 0;
 
 	public DrawArea() {
-		draw();
+		draw();		
 	}
 	
 	protected void draw(){
