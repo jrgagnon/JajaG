@@ -118,15 +118,26 @@ public class JFXPaint extends Application {
 		hbox.getChildren().add(circleBtn);
 		hbox.getChildren().add(eraserBtn);
 
+		HBox tempBox = new HBox();
+		tempBox.getChildren().add(eraserBtn);
+		
+		
+		
 		VBox vbox = new VBox();
 
 		vbox.getChildren().add(toolLabel);
 		vbox.getChildren().add(hbox);
+		vbox.getChildren().add(tempBox);
 		vbox.getChildren().add(swingNode);
 		vbox.getChildren().add(colorPicker);
 		vbox.setPadding(new Insets(20, 10, 10, 20));
 
 		((Group) scene.getRoot()).getChildren().add(vbox);
+		
+		//
+
+		//
+		
 		stage.setScene(scene);
 		stage.show();
 	}

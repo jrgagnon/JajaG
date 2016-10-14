@@ -2,6 +2,7 @@ package PaintGUI;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -11,8 +12,12 @@ import javax.swing.JPanel;
 
 public class SwingPaint
 {
-
-	JButton clearBtn, redBtn, blackBtn, magentaBtn, blueBtn, greenBtn, yellowBtn, grayBtn, orangeBtn, drawLineBtn, rectBtn, circleBtn, eraserBtn;
+	// Color buttons
+	JButton redBtn, blackBtn, magentaBtn, blueBtn, greenBtn, yellowBtn, grayBtn, orangeBtn;
+	// Tool buttons
+	JButton clearBtn, drawLineBtn, rectBtn, circleBtn, eraserBtn, fileBtn, homeBtn;
+	
+	
 	DrawArea drawArea;
 	ActionListener actionListener = new ActionListener()
 	{
@@ -116,8 +121,13 @@ public class SwingPaint
 		circleBtn.addActionListener(actionListener);
 		eraserBtn = new JButton("Eraser");
 		eraserBtn.addActionListener(actionListener);
+		fileBtn = new JButton("File");
+		//fileBtn.setFont(new Font("Arial", Font.PLAIN, 12));
+		homeBtn = new JButton("Home");
 		
 		//add controls to panel
+		controls.add(fileBtn);
+		controls.add(homeBtn);
 		controls.add(clearBtn);
 		
 		//add tools to the control panel
