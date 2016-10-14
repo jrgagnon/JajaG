@@ -17,7 +17,6 @@ import javax.swing.JComponent;
  * @author Andrew Fox
  *
  */
-@SuppressWarnings("serial")
 public class DrawArea extends JComponent {
 
 	// image were going to draw
@@ -25,7 +24,7 @@ public class DrawArea extends JComponent {
 	// used to draw on
 	private Graphics2D g2;
 	// Mouse coordinates
-	private int currentX, currentY, oldX, oldY;
+	private int currentX, currentY, oldX, oldY, shapeX, shapeY;
 
 	/**
 	 * Cases for the tool variable 0: Draw Line 1: Rectangle 2: Circle 3: Eraser
@@ -33,51 +32,49 @@ public class DrawArea extends JComponent {
 	public int tool = 0;
 
 	public DrawArea() {
+		//set up variables
+		shapeX = -1;
+		shapeY = -1;
 		draw();		
 	}
 	
 	protected void draw(){
-		System.out.println(tool);
-
-		if (tool == 0) { // Draw Line
-			setDoubleBuffered(false);
-			addMouseListener(new MouseAdapter() {
-				public void mousePressed(MouseEvent e) {
-					// save x,y when mouse pressed
-					oldX = e.getX();
-					oldY = e.getY();
-				}
-
-			});
-
-			addMouseMotionListener(new MouseMotionAdapter() {
-				public void mouseDragged(MouseEvent e) {
-					// coord x,y when mouse is dragged
-					currentX = e.getX();
-					currentY = e.getY();
-
-					if (g2 != null) {
-						// draw line
-						g2.drawLine(oldX, oldY, currentX, currentY);
-						// refresh draw area to paint
-						repaint();
-						// store current coords x,y
-						oldX = currentX;
-						oldY = currentY;
-					}
-				}
-
-			});
-		} else if (tool == 1) {// Draw Rect
-
-		} else if (tool == 2) {// Draw Circle
-
-		} else if(tool == 3){//Erase
+		
+		setDoubleBuffered(false);
+		addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) 
+			{
+				// save x,y when mouse pressed
+				oldX = e.getX();
+				oldY = e.getY();
+			}
 			
-		}
+			public void mouseReleased(MouseEvent m)
+	          {
+				shapeX = m.getX();
+				shapeY = m.getY();
+	            repaint();	            
+	          }
+
+		});
+
+		addMouseMotionListener(new MouseMotionAdapter() 
+		{
+			public void mouseDragged(MouseEvent e) {
+				// coord x,y when mouse is dragged
+				currentX = e.getX();
+				currentY = e.getY();
+				repaint();				
+			}
+
+		});
+		
 	}
 
 	protected void paintComponent(Graphics g) {
+		
+		super.paintComponent(g2);
+		
 		if (image == null) {
 			// image to draw null => create
 			image = (BufferedImage) createImage(getSize().width, getSize().height);
@@ -89,6 +86,99 @@ public class DrawArea extends JComponent {
 		}
 
 		g.drawImage(image, 0, 0, null);
+		
+		//System.out.println(tool);
+
+		if (tool == 0) { // Draw Line
+			
+			if (g2 != null) {
+				// draw line
+				g2.drawLine(oldX, oldY, currentX, currentY);
+				// refresh draw area to paint
+				// store current coords x,y
+				oldX = currentX;
+				oldY = currentY;
+				shapeX = -1;
+	    		shapeY = -1;
+			}
+			
+		} else if (tool == 1) {// Draw Rect
+			
+			if(g2 != null && shapeX != -1 && shapeY != -1)
+			{
+				//find lowest x and y, then gain shape size
+				int tempX;
+				int tempY;
+				int lengthX;
+				int lengthY;
+				if(oldX < shapeX){
+					tempX = oldX;
+					lengthX = shapeX - oldX;
+				}else{
+					tempX = shapeX;
+					lengthX = oldX - shapeX;
+				}
+				if(oldY < shapeY){
+					tempY = oldY;
+					lengthY = shapeY - oldY;
+				}else{
+					tempY = shapeY;
+					lengthY = oldY - shapeY;
+				}
+				// draw rect
+				g2.drawRect(tempX, tempY, lengthX, lengthY);
+				System.out.println(tempX + ", " + tempY + ", " + lengthX + ", " + lengthY);
+				// refresh draw area to paint
+				// store current coords x,y
+//				oldX = shapeX;
+//				oldY = shapeY;
+				shapeX = -1;
+	    		shapeY = -1;
+	    		repaint();
+			}
+
+		} else if (tool == 2) {// Draw Circle
+			if(g2 != null && shapeX != -1 && shapeY != -1)
+			{
+				//find lowest x and y, then gain shape size
+				int tempX;
+				int tempY;
+				int lengthX;
+				int lengthY;
+				if(oldX < shapeX){
+					tempX = oldX;
+					lengthX = shapeX - oldX;
+				}else{
+					tempX = shapeX;
+					lengthX = oldX - shapeX;
+				}
+				if(oldY < shapeY){
+					tempY = oldY;
+					lengthY = shapeY - oldY;
+				}else{
+					tempY = shapeY;
+					lengthY = oldY - shapeY;
+				}
+				// draw rect
+				g2.drawOval(tempX, tempY, lengthX, lengthY);
+				System.out.println(tempX + ", " + tempY + ", " + lengthX + ", " + lengthY);
+				// refresh draw area to paint
+				// store current coords x,y
+//				oldX = shapeX;
+//				oldY = shapeY;
+				shapeX = -1;
+	    		shapeY = -1;
+	    		repaint();
+			}
+
+		} else if(tool == 3){//Erase
+			
+			if(g2 != null)
+			{
+				
+			}
+			
+		}
 	}
 
 	// now we create exposed methods
