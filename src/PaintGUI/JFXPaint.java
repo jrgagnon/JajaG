@@ -4,9 +4,12 @@ import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingNode;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
@@ -22,12 +25,13 @@ import javafx.stage.Stage;
  */
 public class JFXPaint extends Application {
 
-	private static final Label label = new Label("Tools:");
+	private static final Label toolLabel = new Label("Tools:");
 
 	public static void main(String[] args) {
 		launch(args);
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void start(Stage stage) {
 
@@ -50,7 +54,8 @@ public class JFXPaint extends Application {
 				if (new_toggle == null) {
 					// Do Nothing on no change
 				} else {
-					
+
+					// Calls Methods when specific tool buttons are pressed
 					int tool = (int) tools.getSelectedToggle().getUserData();
 					switch (tool) {
 					case 0:
@@ -74,6 +79,16 @@ public class JFXPaint extends Application {
 
 			}
 		});
+
+		// Declare the color picker
+		final ColorPicker colorPicker = new ColorPicker();
+		
+		//Event that calls the change color method when the color pickers color is changed
+		colorPicker.setOnAction(new EventHandler() {
+            public void handle(Event t) {
+                drawArea.changeColor(colorPicker.getValue());               
+            }
+        });
 
 		ToggleButton drawLineBtn = new ToggleButton("Line");
 		drawLineBtn.setToggleGroup(tools);
@@ -105,9 +120,10 @@ public class JFXPaint extends Application {
 
 		VBox vbox = new VBox();
 
-		vbox.getChildren().add(label);
+		vbox.getChildren().add(toolLabel);
 		vbox.getChildren().add(hbox);
 		vbox.getChildren().add(swingNode);
+		vbox.getChildren().add(colorPicker);
 		vbox.setPadding(new Insets(20, 10, 10, 20));
 
 		((Group) scene.getRoot()).getChildren().add(vbox);
