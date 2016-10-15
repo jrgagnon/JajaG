@@ -9,7 +9,6 @@ import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -32,8 +31,6 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 
 /**
  * Used to intialize JFX components currently for testing purposes
@@ -42,10 +39,10 @@ import javafx.scene.paint.Color;
  */
 public class JFXPaint extends Application {
 
-	//Variables for canvas width and height
+	// Variables for canvas width and height
 	public int cw = 700;
 	public int ch = 400;
-	
+
 	private final Label toolLabel = new Label("Tools:");
 
 	public static void main(String[] args) {
@@ -54,21 +51,15 @@ public class JFXPaint extends Application {
 
 	public void start(Stage stage) {
 
-		// Imports the JComponent Draw Area into the JFX Window
-		SwingNode swingNode = new SwingNode();
-		JFXDrawArea drawArea = new JFXDrawArea();
-		swingNode.setContent(drawArea);
-
 		Scene scene = new Scene(new Group());
 		stage.setTitle("JFXPaint");
 		stage.setWidth(800);
 		stage.setHeight(600);
-		
-		//Declare the canvas
+
+		// Declare the canvas
 		JFXCanvas jc = new JFXCanvas();
 		Canvas canvas = new Canvas(cw, ch);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        
+		GraphicsContext gc = canvas.getGraphicsContext2D();
 
 		// Group that Contains all the toggle buttons, only one or no buttons in
 		// this group can be selected
@@ -84,25 +75,18 @@ public class JFXPaint extends Application {
 					int tool = (int) tools.getSelectedToggle().getUserData();
 					switch (tool) {
 					case 0:
-						jc.stop(gc, canvas);
 						jc.drawLine(gc, canvas);
-						drawArea.drawLineTool();
 						break;
 					case 1:
-						jc.stop(gc, canvas);
 						jc.drawRect(gc, canvas);
-						drawArea.rectTool();
 						break;
 					case 2:
-						jc.stop(gc, canvas);
-						drawArea.circleTool();
+						jc.drawCircle(gc, canvas);
 						break;
 					case 3:
-						jc.stop(gc, canvas);
-						drawArea.eraserTool();
+						jc.erase(gc, canvas);
 						break;
 					default:
-						jc.stop(gc, canvas);
 						System.out.println("Default");
 						break;
 
@@ -111,35 +95,44 @@ public class JFXPaint extends Application {
 
 			}
 		});
-		
-		Button buttonSave = new Button("Save");
-        buttonSave.setOnAction(new EventHandler<ActionEvent>() {
- 
-            @Override
-            public void handle(ActionEvent t) {
-                FileChooser fileChooser = new FileChooser();
-                 
-                //Set extension filter
-                FileChooser.ExtensionFilter extFilter = 
-                        new FileChooser.ExtensionFilter("png files (*.png)", "*.png");
-                fileChooser.getExtensionFilters().add(extFilter);
-               
-                //Show save file dialog
-                File file = fileChooser.showSaveDialog(stage);
-                 
-                if(file != null){
-                    try {
-                        WritableImage writableImage = new WritableImage(cw, ch);
-                        canvas.snapshot(null, writableImage);
-                        RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
-                        ImageIO.write(renderedImage, "png", file);
-                    } catch (IOException ex) {
-                        Logger.getLogger(JFXPaint.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-             
-        });
+
+		// Save Option
+		Button saveBtn = new Button("Save");
+		saveBtn.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent t) {
+				FileChooser fileChooser = new FileChooser();
+
+				// Set extension filter
+				FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("png files (*.png)", "*.png");
+				fileChooser.getExtensionFilters().add(extFilter);
+
+				// Show save file dialog
+				File file = fileChooser.showSaveDialog(stage);
+
+				if (file != null) {
+					try {
+						WritableImage writableImage = new WritableImage(cw, ch);
+						canvas.snapshot(null, writableImage);
+						RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
+						ImageIO.write(renderedImage, "png", file);
+					} catch (IOException ex) {
+						Logger.getLogger(JFXPaint.class.getName()).log(Level.SEVERE, null, ex);
+					}
+				}
+			}
+
+		});
+
+		Button clearBtn = new Button("Clear");
+		clearBtn.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent t) {
+				jc.clear(gc, canvas);
+			}
+		});
 
 		// Declare the color picker
 		final ColorPicker colorPicker = new ColorPicker();
@@ -179,18 +172,19 @@ public class JFXPaint extends Application {
 		toolBox.getChildren().add(rectButton);
 		toolBox.getChildren().add(circleBtn);
 		toolBox.getChildren().add(eraserBtn);
-		
+
 		HBox tray = new HBox();
-		
+
 		tray.getChildren().add(colorPicker);
-		tray.getChildren().add(buttonSave);
-		
+		tray.getChildren().add(clearBtn);
+		tray.getChildren().add(saveBtn);
+
 		VBox vbox = new VBox();
 
 		vbox.getChildren().add(toolLabel);
 		vbox.getChildren().add(toolBox);
 		vbox.getChildren().add(canvas);
-		//vbox.getChildren().add(swingNode);
+		// vbox.getChildren().add(swingNode);
 		vbox.getChildren().add(tray);
 		vbox.setPadding(new Insets(20, 10, 10, 20));
 

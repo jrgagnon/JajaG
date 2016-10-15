@@ -42,15 +42,14 @@ public class JFXCanvas {
 			@Override
 			public void handle(MouseEvent t) {
 				if (t.getClickCount() > 1) {
-					reset(canvas, Color.BLACK);
+					clear(gc, canvas);
 				}
 			}
 		});
 
 	}
 
-	private void reset(Canvas canvas, Color color) {
-		GraphicsContext gc = canvas.getGraphicsContext2D();
+	public void clear(GraphicsContext gc, Canvas canvas) {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 	}
 
@@ -63,14 +62,13 @@ public class JFXCanvas {
 		gc.setStroke(value);		
 	}
 
-	public void stop(GraphicsContext gc, Canvas canvas) {
-		canvas.addEventHandler(MouseEvent.MOUSE_RELEASED, new EventHandler<MouseEvent>() {
+	public void drawCircle(GraphicsContext gc, Canvas canvas) {
+		// TODO Auto-generated method stub
+		
+	}
 
-			@Override
-			public void handle(MouseEvent event) {
-
-			}
-		});
+	public void erase(GraphicsContext gc, Canvas canvas) {
+		// TODO Auto-generated method stub
 		
 	}
 	
