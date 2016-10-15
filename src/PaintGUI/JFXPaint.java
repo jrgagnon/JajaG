@@ -60,6 +60,7 @@ public class JFXPaint extends Application {
 		JFXCanvas jc = new JFXCanvas();
 		Canvas canvas = new Canvas(cw, ch);
 		GraphicsContext gc = canvas.getGraphicsContext2D();
+		jc.draw(gc, canvas);
 
 		// Group that Contains all the toggle buttons, only one or no buttons in
 		// this group can be selected
@@ -75,16 +76,16 @@ public class JFXPaint extends Application {
 					int tool = (int) tools.getSelectedToggle().getUserData();
 					switch (tool) {
 					case 0:
-						jc.drawLine(gc, canvas);
+						jc.tool = 0;
 						break;
 					case 1:
-						jc.drawRect(gc, canvas);
+						jc.tool = 1;
 						break;
 					case 2:
-						jc.drawCircle(gc, canvas);
+						jc.tool = 2;
 						break;
 					case 3:
-						jc.erase(gc, canvas);
+						jc.tool = 3;
 						break;
 					default:
 						System.out.println("Default");
