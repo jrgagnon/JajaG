@@ -16,6 +16,7 @@ public class JFXCanvas {
 	protected double endY = 0.0;
 
 	protected int pressed = 0;
+	protected boolean eraser = false;
 
 	public int tool = 0;
 
@@ -97,6 +98,7 @@ public class JFXCanvas {
 			drawCircle(gc, canvas);
 			break;
 		case 3:
+			eraser = true;
 			erase(gc, canvas);
 			break;
 		default:
@@ -190,7 +192,25 @@ public class JFXCanvas {
 
 	// Eraser Tool Called when tool == 1
 	public void erase(GraphicsContext gc, Canvas canvas) {
-		// TODO Auto-generated method stub
+
+		gc.setStroke(Color.WHITE);
+		gc.setLineWidth(50.0);
+		
+		// Start the path from the new mouse location on click
+		if (pressed == 1) {
+			gc.beginPath();
+			gc.moveTo(oldX, oldY);
+			gc.stroke();
+
+		// Erase a path if the mouse is dragged
+		} else if (pressed == 2) {
+			gc.lineTo(curX, curY);
+			gc.stroke();
+		}else if(pressed == 0 && eraser){
+			gc.setStroke(Color.BLACK);
+			gc.setLineWidth(1.0);
+			
+		}
 
 	}
 
