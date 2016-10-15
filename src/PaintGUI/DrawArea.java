@@ -8,7 +8,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
+import java.io.File;
 
+import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 
 /**
@@ -222,5 +224,23 @@ public class DrawArea extends JComponent {
 
 	public void orange() {
 		g2.setPaint(Color.orange);
+	}
+	
+	public void setColor(Color c){
+		g2.setPaint(c);
+	}
+	
+	public void saveImage(){
+		try{
+			//retrieve image
+			BufferedImage bi = image;
+			File outputFile = new File("saved.png");
+			outputFile.getAbsolutePath();
+			ImageIO.write(bi, "png", outputFile);
+			System.out.println("Success: " + outputFile.getAbsolutePath());
+		}
+		catch(Exception e){
+			System.out.println("Error");
+		}
 	}
 }
