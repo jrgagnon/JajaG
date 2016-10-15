@@ -5,7 +5,6 @@ import java.awt.Graphics;
 
 import javax.swing.JComponent;
 
-@SuppressWarnings("serial")
 public class JFXDrawArea extends JComponent {
 
 	javafx.scene.paint.Color c = javafx.scene.paint.Color.rgb(0, 0, 0);
@@ -24,7 +23,6 @@ public class JFXDrawArea extends JComponent {
 		setVisible(true);
 	}
 	
-	@Override
 	public void paint(Graphics g) {
 		g.setColor(new Color(r,gn,b));
 		g.fillRect(0, 0, getWidth(), getHeight());		
