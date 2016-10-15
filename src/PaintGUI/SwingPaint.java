@@ -1,24 +1,34 @@
 package PaintGUI;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
 
 import javax.swing.JButton;
+import javax.swing.JColorChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import com.sun.glass.events.WindowEvent;
 
 public class SwingPaint
 {
 	// Color buttons
 	JButton redBtn, blackBtn, magentaBtn, blueBtn, greenBtn, yellowBtn, grayBtn, orangeBtn;
 	// Tool buttons
-	JButton clearBtn, drawLineBtn, rectBtn, circleBtn, eraserBtn, fileBtn, homeBtn;
-	
-	
+	JButton clearBtn, drawLineBtn, rectBtn, circleBtn, eraserBtn, fileBtn, homeBtn, colorPicker, saveBtn;
+	//ColorPicker cP;
 	DrawArea drawArea;
+	//Gbobal vars
+	private Color colorVar;
+	
+	
 	ActionListener actionListener = new ActionListener()
 	{
 		public void actionPerformed(ActionEvent e)
@@ -66,6 +76,16 @@ public class SwingPaint
 			{
 				drawArea.tool = 3;
 				//Call button change to eraser
+			}else if(e.getSource() == colorPicker){
+				
+				colorVar = JColorChooser.showDialog(null, "Choose a Color.", colorPicker.getForeground());
+				if(colorVar != null){
+					colorPicker.setForeground(colorVar);
+					drawArea.setColor(colorVar);					
+				}
+			}else if(e.getSource() == saveBtn){
+				
+				drawArea.saveImage();
 			}
 			
 			
@@ -91,6 +111,10 @@ public class SwingPaint
 		//create controls to apply colors and call clear feature
 		JPanel controls = new JPanel();
 		JPanel colors = new JPanel();
+		
+		//add color picker
+		colorPicker = new JButton("Color Picker");
+		colorPicker.addActionListener(actionListener);
 		 
 		//Color Buttons
 		clearBtn = new JButton("Clear");
@@ -124,9 +148,12 @@ public class SwingPaint
 		fileBtn = new JButton("File");
 		//fileBtn.setFont(new Font("Arial", Font.PLAIN, 12));
 		homeBtn = new JButton("Home");
+		saveBtn = new JButton("Save");
+		saveBtn.addActionListener(actionListener);
 		
 		//add controls to panel
 		controls.add(fileBtn);
+		controls.add(saveBtn);
 		controls.add(homeBtn);
 		controls.add(clearBtn);
 		
@@ -145,6 +172,7 @@ public class SwingPaint
 		colors.add(yellowBtn);
 		colors.add(grayBtn);
 		colors.add(orangeBtn);
+		colors.add(colorPicker);
 		
 		
 		//add to content pane
@@ -160,6 +188,13 @@ public class SwingPaint
 		
 		
 		
+	}
+	
+	
+	   
+	public void ColorPicker()
+	{	 
+	      
 	}
 	
 }
