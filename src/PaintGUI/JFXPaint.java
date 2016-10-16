@@ -8,6 +8,7 @@ import javax.imageio.ImageIO;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -18,6 +19,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Toggle;
@@ -43,8 +45,6 @@ public class JFXPaint extends Application {
 	public int cw = 700;
 	public int ch = 400;
 
-	private final Label toolLabel = new Label("Tools:");
-
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -62,6 +62,20 @@ public class JFXPaint extends Application {
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		jc.draw(gc, canvas);
 
+		// Line Size Chooser
+		ChoiceBox lineSize = new ChoiceBox(FXCollections.observableArrayList("1pt", "25pt", "50pt", "100pt"));
+
+		lineSize.getSelectionModel().select(0);
+
+		lineSize.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+
+			public void changed(ObservableValue ov, Number value, Number new_value) {
+				jc.lineSize = new_value.intValue();
+				jc.changeLineSize(gc);
+			}
+
+		});
+
 		// Group that Contains all the toggle buttons, only one or no buttons in
 		// this group can be selected
 		final ToggleGroup tools = new ToggleGroup();
@@ -73,19 +87,24 @@ public class JFXPaint extends Application {
 				} else {
 
 					// Calls Methods when specific tool buttons are pressed
+					// Sets the line size to the appropriate default
 					int tool = (int) tools.getSelectedToggle().getUserData();
 					switch (tool) {
 					case 0:
+						lineSize.getSelectionModel().select(0);
 						jc.tool = 0;
 						break;
 					case 1:
+						lineSize.getSelectionModel().select(0);
 						jc.tool = 1;
 						break;
 					case 2:
+						lineSize.getSelectionModel().select(0);
 						jc.tool = 2;
 						break;
 					case 3:
 						jc.tool = 3;
+						lineSize.getSelectionModel().select(2);
 						break;
 					default:
 						System.out.println("Default");
@@ -146,6 +165,8 @@ public class JFXPaint extends Application {
 			}
 		});
 
+		Label toolLabel = new Label("Tools:");
+
 		ToggleButton drawLineBtn = new ToggleButton("Line");
 		drawLineBtn.setToggleGroup(tools);
 		drawLineBtn.setUserData(0);
@@ -179,13 +200,13 @@ public class JFXPaint extends Application {
 		tray.getChildren().add(colorPicker);
 		tray.getChildren().add(clearBtn);
 		tray.getChildren().add(saveBtn);
+		tray.getChildren().add(lineSize);
 
 		VBox vbox = new VBox();
 
 		vbox.getChildren().add(toolLabel);
 		vbox.getChildren().add(toolBox);
 		vbox.getChildren().add(canvas);
-		// vbox.getChildren().add(swingNode);
 		vbox.getChildren().add(tray);
 		vbox.setPadding(new Insets(20, 10, 10, 20));
 
