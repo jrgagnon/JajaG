@@ -75,6 +75,11 @@ public class JFXCanvas {
 		});
 	}
 
+	public void border(GraphicsContext gc, Canvas canvas) {
+		// Set a draw border
+		gc.strokeRect(0, 0, canvas.getWidth(), canvas.getHeight());
+	}
+
 	public void clear(GraphicsContext gc, Canvas canvas) {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 	}

@@ -42,8 +42,8 @@ import java.util.logging.Logger;
 public class JFXPaint extends Application {
 
 	// Variables for canvas width and height
-	public int cw = 700;
-	public int ch = 400;
+	public double cw = 760;
+	public double ch = 480;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -74,6 +74,24 @@ public class JFXPaint extends Application {
 				jc.changeLineSize(gc);
 			}
 
+		});
+
+		// Changes the size of the canvas when the window resizes
+		scene.widthProperty().addListener(new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth,
+					Number newSceneWidth) {
+				cw = ((double) newSceneWidth - 40.0);
+				canvas.setWidth(cw);
+			}
+		});
+		scene.heightProperty().addListener(new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight,
+					Number newSceneHeight) {
+				ch = ((double) newSceneHeight - 120.0);
+				canvas.setHeight(ch);
+			}
 		});
 
 		// Group that Contains all the toggle buttons, only one or no buttons in
@@ -133,7 +151,7 @@ public class JFXPaint extends Application {
 
 				if (file != null) {
 					try {
-						WritableImage writableImage = new WritableImage(cw, ch);
+						WritableImage writableImage = new WritableImage((int) cw, (int) ch);
 						canvas.snapshot(null, writableImage);
 						RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
 						ImageIO.write(renderedImage, "png", file);
@@ -208,7 +226,7 @@ public class JFXPaint extends Application {
 		vbox.getChildren().add(toolBox);
 		vbox.getChildren().add(canvas);
 		vbox.getChildren().add(tray);
-		vbox.setPadding(new Insets(20, 10, 10, 20));
+		vbox.setPadding(new Insets(5, 10, 5, 10));
 
 		((Group) scene.getRoot()).getChildren().add(vbox);
 		stage.setScene(scene);
