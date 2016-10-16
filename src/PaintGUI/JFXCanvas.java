@@ -19,6 +19,7 @@ public class JFXCanvas {
 	protected boolean eraser = false;
 
 	public int tool = 0;
+	public int lineSize = 0;
 
 	public void draw(GraphicsContext gc, Canvas canvas) {
 
@@ -72,6 +73,11 @@ public class JFXCanvas {
 				}
 			}
 		});
+	}
+
+	public void border(GraphicsContext gc, Canvas canvas) {
+		// Set a draw border
+		gc.strokeRect(0, 0, canvas.getWidth(), canvas.getHeight());
 	}
 
 	public void clear(GraphicsContext gc, Canvas canvas) {
@@ -194,22 +200,42 @@ public class JFXCanvas {
 	public void erase(GraphicsContext gc, Canvas canvas) {
 
 		gc.setStroke(Color.WHITE);
-		gc.setLineWidth(50.0);
-		
+
 		// Start the path from the new mouse location on click
 		if (pressed == 1) {
 			gc.beginPath();
 			gc.moveTo(oldX, oldY);
 			gc.stroke();
 
-		// Erase a path if the mouse is dragged
+			// Erase a path if the mouse is dragged
 		} else if (pressed == 2) {
 			gc.lineTo(curX, curY);
 			gc.stroke();
-		}else if(pressed == 0 && eraser){
+		} else if (pressed == 0 && eraser) {
 			gc.setStroke(Color.BLACK);
+		}
+
+	}
+
+	public void changeLineSize(GraphicsContext gc) {
+
+		switch (lineSize) {
+		case 0:
 			gc.setLineWidth(1.0);
-			
+			break;
+		case 1:
+			gc.setLineWidth(25.0);
+			break;
+		case 2:
+			gc.setLineWidth(50.0);
+			break;
+		case 3:
+			gc.setLineWidth(100.0);
+			break;
+		default:
+			System.out.println("Default");
+			break;
+
 		}
 
 	}
