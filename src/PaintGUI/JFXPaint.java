@@ -23,6 +23,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
@@ -137,9 +140,21 @@ public class JFXPaint extends Application {
 			}
 		});
 
-		// Save Option
-		Button saveBtn = new Button("Save");
-		saveBtn.setOnAction(new EventHandler<ActionEvent>() {
+		
+		//Beggining of Menu Bar Section
+		// Create Menu
+		MenuBar menuBar = new MenuBar();
+
+		// --- File Menu Option
+		Menu menuFile = new Menu("File");
+
+		// Adds the menu options to the menu bar
+		// just , (menuoption) in the addAll to add
+		menuBar.getMenus().addAll(menuFile);
+
+		//Save Option
+		MenuItem save = new MenuItem("Save");
+		save.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent t) {
@@ -168,10 +183,10 @@ public class JFXPaint extends Application {
 			}
 
 		});
-
-		// Load Option
-		Button openBtn = new Button("Open");
-		openBtn.setOnAction(new EventHandler<ActionEvent>() {
+		
+		//Open Option
+		MenuItem open = new MenuItem("Open");
+		open.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent t) {
@@ -197,6 +212,19 @@ public class JFXPaint extends Application {
 			}
 
 		});
+		
+		//Clear Option
+		MenuItem clear = new MenuItem("New");
+		clear.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent t) {
+				jc.clear(gc, canvas);
+			}
+		});
+		
+		//Add menu options to file portion of the menu bar
+		menuFile.getItems().addAll(clear, open, save);
 
 		Button clearBtn = new Button("Clear");
 		clearBtn.setOnAction(new EventHandler<ActionEvent>() {
@@ -251,13 +279,12 @@ public class JFXPaint extends Application {
 		HBox tray = new HBox();
 
 		tray.getChildren().add(colorPicker);
-		tray.getChildren().add(clearBtn);
-		tray.getChildren().add(saveBtn);
-		tray.getChildren().add(openBtn);
+		//tray.getChildren().add(clearBtn);
 		tray.getChildren().add(lineSize);
 
 		VBox vbox = new VBox();
 
+		vbox.getChildren().add(menuBar);
 		vbox.getChildren().add(toolLabel);
 		vbox.getChildren().add(toolBox);
 		vbox.getChildren().add(canvas);
