@@ -1,5 +1,6 @@
 package PaintGUI;
 
+import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.IOException;
 
@@ -25,6 +26,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -53,8 +55,9 @@ public class JFXPaint extends Application {
 
 		Scene scene = new Scene(new Group());
 		stage.setTitle("JFXPaint");
-		stage.setWidth(800);
-		stage.setHeight(600);
+		// stage.setWidth(800);
+		// stage.setHeight(600);
+		stage.setMaximized(true);
 
 		// Declare the canvas
 		JFXCanvas jc = new JFXCanvas();
@@ -143,8 +146,11 @@ public class JFXPaint extends Application {
 				FileChooser fileChooser = new FileChooser();
 
 				// Set extension filter
-				FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("png files (*.png)", "*.png");
-				fileChooser.getExtensionFilters().add(extFilter);
+				FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("JPG files (*.jpg)",
+						"*.JPG");
+				FileChooser.ExtensionFilter extFilterPNG = new FileChooser.ExtensionFilter("PNG files (*.png)",
+						"*.PNG");
+				fileChooser.getExtensionFilters().addAll(extFilterJPG, extFilterPNG);
 
 				// Show save file dialog
 				File file = fileChooser.showSaveDialog(stage);
@@ -159,6 +165,35 @@ public class JFXPaint extends Application {
 						Logger.getLogger(JFXPaint.class.getName()).log(Level.SEVERE, null, ex);
 					}
 				}
+			}
+
+		});
+
+		// Load Option
+		Button openBtn = new Button("Open");
+		openBtn.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent t) {
+				FileChooser fileChooser = new FileChooser();
+
+				FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("JPG files (*.jpg)",
+						"*.JPG");
+				FileChooser.ExtensionFilter extFilterPNG = new FileChooser.ExtensionFilter("PNG files (*.png)",
+						"*.PNG");
+				fileChooser.getExtensionFilters().addAll(extFilterJPG, extFilterPNG);
+
+				// Show open file dialog
+				File file = fileChooser.showOpenDialog(null);
+
+				try {
+					BufferedImage bufferedImage = ImageIO.read(file);
+					Image image = SwingFXUtils.toFXImage(bufferedImage, null);
+					jc.imageDraw(gc, canvas, image);
+				} catch (IOException ex) {
+					Logger.getLogger(JFXPaint.class.getName()).log(Level.SEVERE, null, ex);
+				}
+
 			}
 
 		});
@@ -218,6 +253,7 @@ public class JFXPaint extends Application {
 		tray.getChildren().add(colorPicker);
 		tray.getChildren().add(clearBtn);
 		tray.getChildren().add(saveBtn);
+		tray.getChildren().add(openBtn);
 		tray.getChildren().add(lineSize);
 
 		VBox vbox = new VBox();
