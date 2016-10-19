@@ -140,8 +140,7 @@ public class JFXPaint extends Application {
 			}
 		});
 
-		
-		//Beggining of Menu Bar Section
+		// Beggining of Menu Bar Section
 		// Create Menu
 		MenuBar menuBar = new MenuBar();
 
@@ -152,7 +151,7 @@ public class JFXPaint extends Application {
 		// just , (menuoption) in the addAll to add
 		menuBar.getMenus().addAll(menuFile);
 
-		//Save Option
+		// Save Option
 		MenuItem save = new MenuItem("Save");
 		save.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -161,11 +160,15 @@ public class JFXPaint extends Application {
 				FileChooser fileChooser = new FileChooser();
 
 				// Set extension filter
-				FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("JPG files (*.jpg)",
-						"*.JPG");
-				FileChooser.ExtensionFilter extFilterPNG = new FileChooser.ExtensionFilter("PNG files (*.png)",
+				FileChooser.ExtensionFilter imageExtensions = new FileChooser.ExtensionFilter("all images", "*.jpg",
+						"*.png", "*.JPG", "*.PNG", "*.jpeg", ".JPEG");
+
+				FileChooser.ExtensionFilter extFilterjpg = new FileChooser.ExtensionFilter("jpg files (*.jpg)", "*.jpg",
+						"*.JPG", "*.jpeg", ".JPEG");
+
+				FileChooser.ExtensionFilter extFilterpng = new FileChooser.ExtensionFilter("png files (*.png)", "*.png",
 						"*.PNG");
-				fileChooser.getExtensionFilters().addAll(extFilterJPG, extFilterPNG);
+				fileChooser.getExtensionFilters().addAll(imageExtensions, extFilterjpg, extFilterpng);
 
 				// Show save file dialog
 				File file = fileChooser.showSaveDialog(stage);
@@ -183,8 +186,8 @@ public class JFXPaint extends Application {
 			}
 
 		});
-		
-		//Open Option
+
+		// Open Option
 		MenuItem open = new MenuItem("Open");
 		open.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -192,28 +195,36 @@ public class JFXPaint extends Application {
 			public void handle(ActionEvent t) {
 				FileChooser fileChooser = new FileChooser();
 
-				FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("JPG files (*.jpg)",
-						"*.JPG");
-				FileChooser.ExtensionFilter extFilterPNG = new FileChooser.ExtensionFilter("PNG files (*.png)",
-						"*.PNG");
-				fileChooser.getExtensionFilters().addAll(extFilterJPG, extFilterPNG);
+				FileChooser.ExtensionFilter imageExtensions = new FileChooser.ExtensionFilter("all images", "*.jpg",
+						"*.png", "*.JPG", "*.PNG", "*.jpeg", ".JPEG");
 
+				FileChooser.ExtensionFilter extFilterjpg = new FileChooser.ExtensionFilter("jpg files (*.jpg)", "*.jpg",
+						"*.JPG", "*.jpeg", ".JPEG");
+
+				FileChooser.ExtensionFilter extFilterpng = new FileChooser.ExtensionFilter("png files (*.png)", "*.png",
+						"*.PNG");
+				fileChooser.getExtensionFilters().addAll(imageExtensions, extFilterjpg, extFilterpng);
 				// Show open file dialog
 				File file = fileChooser.showOpenDialog(null);
 
-				try {
-					BufferedImage bufferedImage = ImageIO.read(file);
-					Image image = SwingFXUtils.toFXImage(bufferedImage, null);
-					jc.imageDraw(gc, canvas, image);
-				} catch (IOException ex) {
-					Logger.getLogger(JFXPaint.class.getName()).log(Level.SEVERE, null, ex);
+				if (file == null) {
+					// Do Nothing
+				} else {
+
+					try {
+						BufferedImage bufferedImage = ImageIO.read(file);
+						Image image = SwingFXUtils.toFXImage(bufferedImage, null);
+						jc.imageDraw(gc, canvas, image);
+					} catch (IOException ex) {
+						Logger.getLogger(JFXPaint.class.getName()).log(Level.SEVERE, null, ex);
+					}
 				}
 
 			}
 
 		});
-		
-		//Clear Option
+
+		// Clear Option
 		MenuItem clear = new MenuItem("New");
 		clear.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -222,8 +233,8 @@ public class JFXPaint extends Application {
 				jc.clear(gc, canvas);
 			}
 		});
-		
-		//Add menu options to file portion of the menu bar
+
+		// Add menu options to file portion of the menu bar
 		menuFile.getItems().addAll(clear, open, save);
 
 		Button clearBtn = new Button("Clear");
@@ -279,7 +290,7 @@ public class JFXPaint extends Application {
 		HBox tray = new HBox();
 
 		tray.getChildren().add(colorPicker);
-		//tray.getChildren().add(clearBtn);
+		// tray.getChildren().add(clearBtn);
 		tray.getChildren().add(lineSize);
 
 		VBox vbox = new VBox();
