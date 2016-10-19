@@ -1,10 +1,19 @@
 package PaintGUI;
 
 import javafx.event.EventHandler;
+import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.VolatileImage;
+import java.io.File;
+import java.io.IOException;
 
 public class JFXCanvas {
 
@@ -116,6 +125,8 @@ public class JFXCanvas {
 
 	// Line Tool Called when tool == 0
 	public void drawLine(GraphicsContext gc, Canvas canvas) {
+		// Set tool cursor
+		canvas.setCursor(Cursor.CROSSHAIR);
 
 		// Start the path from the new mouse location on click
 		if (pressed == 1) {
@@ -133,6 +144,9 @@ public class JFXCanvas {
 
 	// Rectangle Tool Called when tool == 1
 	public void drawRect(GraphicsContext gc, Canvas canvas) {
+		// Set tool cursor
+		canvas.setCursor(Cursor.CROSSHAIR);
+
 		if (pressed == 0) {
 			// find lowest x and y, then gain shape size
 			double length;
@@ -165,6 +179,8 @@ public class JFXCanvas {
 
 	// Circle Tool Called when tool == 1
 	public void drawCircle(GraphicsContext gc, Canvas canvas) {
+		// Set tool cursor
+		canvas.setCursor(Cursor.CROSSHAIR);
 
 		if (pressed == 0) {
 			// find lowest x and y, then gain shape size
@@ -200,6 +216,16 @@ public class JFXCanvas {
 	public void erase(GraphicsContext gc, Canvas canvas) {
 
 		gc.setStroke(Color.WHITE);
+
+		// Adjust cursor based on line width
+		if (gc.getLineWidth() == 1.0)
+            canvas.setCursor(Cursor.CROSSHAIR);
+		else if (gc.getLineWidth() == 25.0)
+            canvas.setCursor(Cursor.CROSSHAIR);
+		else if (gc.getLineWidth() == 50.0)
+			canvas.setCursor(Cursor.CROSSHAIR);
+		else if (gc.getLineWidth() == 100.0)
+			canvas.setCursor(Cursor.CROSSHAIR);
 
 		// Start the path from the new mouse location on click
 		if (pressed == 1) {
