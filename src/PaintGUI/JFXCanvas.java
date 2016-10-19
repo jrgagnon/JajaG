@@ -3,6 +3,7 @@ package PaintGUI;
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
@@ -238,6 +239,21 @@ public class JFXCanvas {
 
 		}
 
+	}
+
+	public void imageDraw(GraphicsContext gc, Canvas canvas, Image image) {
+		double imageWidth = image.getWidth();
+		double imageHeight = image.getHeight();
+		
+		double canvasWidth = canvas.getWidth();
+		double canvasHeight = canvas.getHeight();
+		
+		if((imageWidth > canvasWidth) || (imageHeight > canvasHeight)){
+			gc.drawImage(image, 0, 0,canvasWidth, canvasHeight);
+		} else {
+			gc.drawImage(image, 0, 0,imageWidth, imageHeight);
+		}		
+		
 	}
 
 }

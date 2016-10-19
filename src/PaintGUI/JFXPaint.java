@@ -1,5 +1,6 @@
 package PaintGUI;
 
+import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.IOException;
 
@@ -22,9 +23,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -53,8 +58,9 @@ public class JFXPaint extends Application {
 
 		Scene scene = new Scene(new Group());
 		stage.setTitle("JFXPaint");
-		stage.setWidth(800);
-		stage.setHeight(600);
+		// stage.setWidth(800);
+		// stage.setHeight(600);
+		stage.setMaximized(true);
 
 		// Declare the canvas
 		JFXCanvas jc = new JFXCanvas();
@@ -134,17 +140,35 @@ public class JFXPaint extends Application {
 			}
 		});
 
+		// Beggining of Menu Bar Section
+		// Create Menu
+		MenuBar menuBar = new MenuBar();
+
+		// --- File Menu Option
+		Menu menuFile = new Menu("File");
+
+		// Adds the menu options to the menu bar
+		// just , (menuoption) in the addAll to add
+		menuBar.getMenus().addAll(menuFile);
+
 		// Save Option
-		Button saveBtn = new Button("Save");
-		saveBtn.setOnAction(new EventHandler<ActionEvent>() {
+		MenuItem save = new MenuItem("Save");
+		save.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent t) {
 				FileChooser fileChooser = new FileChooser();
 
 				// Set extension filter
-				FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("png files (*.png)", "*.png");
-				fileChooser.getExtensionFilters().add(extFilter);
+				FileChooser.ExtensionFilter imageExtensions = new FileChooser.ExtensionFilter("all images", "*.jpg",
+						"*.png", "*.JPG", "*.PNG", "*.jpeg", ".JPEG");
+
+				FileChooser.ExtensionFilter extFilterjpg = new FileChooser.ExtensionFilter("jpg files (*.jpg)", "*.jpg",
+						"*.JPG", "*.jpeg", ".JPEG");
+
+				FileChooser.ExtensionFilter extFilterpng = new FileChooser.ExtensionFilter("png files (*.png)", "*.png",
+						"*.PNG");
+				fileChooser.getExtensionFilters().addAll(imageExtensions, extFilterjpg, extFilterpng);
 
 				// Show save file dialog
 				File file = fileChooser.showSaveDialog(stage);
@@ -162,6 +186,56 @@ public class JFXPaint extends Application {
 			}
 
 		});
+
+		// Open Option
+		MenuItem open = new MenuItem("Open");
+		open.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent t) {
+				FileChooser fileChooser = new FileChooser();
+
+				FileChooser.ExtensionFilter imageExtensions = new FileChooser.ExtensionFilter("all images", "*.jpg",
+						"*.png", "*.JPG", "*.PNG", "*.jpeg", ".JPEG");
+
+				FileChooser.ExtensionFilter extFilterjpg = new FileChooser.ExtensionFilter("jpg files (*.jpg)", "*.jpg",
+						"*.JPG", "*.jpeg", ".JPEG");
+
+				FileChooser.ExtensionFilter extFilterpng = new FileChooser.ExtensionFilter("png files (*.png)", "*.png",
+						"*.PNG");
+				fileChooser.getExtensionFilters().addAll(imageExtensions, extFilterjpg, extFilterpng);
+				// Show open file dialog
+				File file = fileChooser.showOpenDialog(null);
+
+				if (file == null) {
+					// Do Nothing
+				} else {
+
+					try {
+						BufferedImage bufferedImage = ImageIO.read(file);
+						Image image = SwingFXUtils.toFXImage(bufferedImage, null);
+						jc.imageDraw(gc, canvas, image);
+					} catch (IOException ex) {
+						Logger.getLogger(JFXPaint.class.getName()).log(Level.SEVERE, null, ex);
+					}
+				}
+
+			}
+
+		});
+
+		// Clear Option
+		MenuItem clear = new MenuItem("New");
+		clear.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent t) {
+				jc.clear(gc, canvas);
+			}
+		});
+
+		// Add menu options to file portion of the menu bar
+		menuFile.getItems().addAll(clear, open, save);
 
 		Button clearBtn = new Button("Clear");
 		clearBtn.setOnAction(new EventHandler<ActionEvent>() {
@@ -216,12 +290,12 @@ public class JFXPaint extends Application {
 		HBox tray = new HBox();
 
 		tray.getChildren().add(colorPicker);
-		tray.getChildren().add(clearBtn);
-		tray.getChildren().add(saveBtn);
+		// tray.getChildren().add(clearBtn);
 		tray.getChildren().add(lineSize);
 
 		VBox vbox = new VBox();
 
+		vbox.getChildren().add(menuBar);
 		vbox.getChildren().add(toolLabel);
 		vbox.getChildren().add(toolBox);
 		vbox.getChildren().add(canvas);
