@@ -264,7 +264,7 @@ public class JFXPaint extends Application {
 
 		Label toolLabel = new Label("Tools:");
 
-		Image brushImage = new Image(getClass().getResourceAsStream("/icons/brush.jpg"));
+		Image brushImage = new Image(getClass().getResourceAsStream("/icons/brush.png"));
 		ImageView scaledBrush = new ImageView(brushImage);
 		scaledBrush.setFitHeight(fitH);
 		scaledBrush.setFitWidth(fitW);
@@ -275,7 +275,7 @@ public class JFXPaint extends Application {
 		drawLineBtn.setSelected(true);
 		drawLineBtn.setStyle("-fx-base: lightgreen;");
 
-		Image rectImage = new Image(getClass().getResourceAsStream("/icons/square.jpg"));
+		Image rectImage = new Image(getClass().getResourceAsStream("/icons/square.png"));
 		ImageView scaledRect = new ImageView(rectImage);
 		scaledRect.setFitHeight(fitH);
 		scaledRect.setFitWidth(fitW);
@@ -285,7 +285,7 @@ public class JFXPaint extends Application {
 		rectButton.setUserData(1);
 		rectButton.setStyle("-fx-base: lightblue;");
 
-		Image circleImage = new Image(getClass().getResourceAsStream("/icons/circle.jpg"));
+		Image circleImage = new Image(getClass().getResourceAsStream("/icons/circle.png"));
 		ImageView scaledCircle = new ImageView(circleImage);
 		scaledCircle.setFitHeight(fitH);
 		scaledCircle.setFitWidth(fitW);
@@ -295,7 +295,7 @@ public class JFXPaint extends Application {
 		circleBtn.setUserData(2);
 		circleBtn.setStyle("-fx-base: plum;");
 
-		Image eraserImage = new Image(getClass().getResourceAsStream("/icons/eraser.jpg"));
+		Image eraserImage = new Image(getClass().getResourceAsStream("/icons/eraser.png"));
 		ImageView scaledEraser = new ImageView(eraserImage);
 		scaledEraser.setFitHeight(fitH);
 		scaledEraser.setFitWidth(fitW);
