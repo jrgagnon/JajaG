@@ -30,6 +30,7 @@ import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -49,6 +50,9 @@ public class JFXPaint extends Application {
 	// Variables for canvas width and height
 	public double cw = 760;
 	public double ch = 480;
+
+	public double fitW = 40.0;
+	public double fitH = 40.0;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -198,8 +202,10 @@ public class JFXPaint extends Application {
 				FileChooser.ExtensionFilter imageExtensions = new FileChooser.ExtensionFilter("all images", "*.jpg",
 						"*.png", "*.JPG", "*.PNG", "*.jpeg", ".JPEG");
 
+
 				FileChooser.ExtensionFilter extFilterjpg = new FileChooser.ExtensionFilter("jpg files (*.jpg)", "*.jpg",
 						"*.JPG", "*.jpeg", ".JPEG");
+
 
 				FileChooser.ExtensionFilter extFilterpng = new FileChooser.ExtensionFilter("png files (*.png)", "*.png",
 						"*.PNG");
@@ -259,23 +265,43 @@ public class JFXPaint extends Application {
 
 		Label toolLabel = new Label("Tools:");
 
-		ToggleButton drawLineBtn = new ToggleButton("Line");
+		Image brushImage = new Image(getClass().getResourceAsStream("/icons/brush.png"));
+		ImageView scaledBrush = new ImageView(brushImage);
+		scaledBrush.setFitHeight(fitH);
+		scaledBrush.setFitWidth(fitW);
+
+		ToggleButton drawLineBtn = new ToggleButton(null, scaledBrush);
 		drawLineBtn.setToggleGroup(tools);
 		drawLineBtn.setUserData(0);
 		drawLineBtn.setSelected(true);
 		drawLineBtn.setStyle("-fx-base: lightgreen;");
 
-		ToggleButton rectButton = new ToggleButton("Rect");
+		Image rectImage = new Image(getClass().getResourceAsStream("/icons/square.png"));
+		ImageView scaledRect = new ImageView(rectImage);
+		scaledRect.setFitHeight(fitH);
+		scaledRect.setFitWidth(fitW);
+
+		ToggleButton rectButton = new ToggleButton(null, scaledRect);
 		rectButton.setToggleGroup(tools);
 		rectButton.setUserData(1);
 		rectButton.setStyle("-fx-base: lightblue;");
 
-		ToggleButton circleBtn = new ToggleButton("Circle");
+		Image circleImage = new Image(getClass().getResourceAsStream("/icons/circle.png"));
+		ImageView scaledCircle = new ImageView(circleImage);
+		scaledCircle.setFitHeight(fitH);
+		scaledCircle.setFitWidth(fitW);
+
+		ToggleButton circleBtn = new ToggleButton(null, scaledCircle);
 		circleBtn.setToggleGroup(tools);
 		circleBtn.setUserData(2);
 		circleBtn.setStyle("-fx-base: plum;");
 
-		ToggleButton eraserBtn = new ToggleButton("Eraser");
+		Image eraserImage = new Image(getClass().getResourceAsStream("/icons/eraser.png"));
+		ImageView scaledEraser = new ImageView(eraserImage);
+		scaledEraser.setFitHeight(fitH);
+		scaledEraser.setFitWidth(fitW);
+
+		ToggleButton eraserBtn = new ToggleButton(null, scaledEraser);
 		eraserBtn.setToggleGroup(tools);
 		eraserBtn.setUserData(3);
 		eraserBtn.setStyle("-fx-base: salmon;");
