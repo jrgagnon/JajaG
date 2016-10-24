@@ -1,4 +1,6 @@
-@CHARSET "ISO-8859-1";
+.root {
+	-fx-base: rgb(100, 100, 100);
+}
 
 .button {
 	-fx-backround-color: #000000

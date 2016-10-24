@@ -3,6 +3,7 @@ package PaintGUI;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.IOException;
+import java.net.URL;
 
 import javax.imageio.ImageIO;
 
@@ -59,9 +60,14 @@ public class JFXPaint extends Application {
 
 		Scene scene = new Scene(new Group());
 		stage.setTitle("JFXPaint");
-		// stage.setWidth(800);
-		// stage.setHeight(600);
-		stage.setMaximized(true);
+		stage.setWidth(800);
+		stage.setHeight(600);
+		//stage.setMaximized(true);
+		
+		URL url = this.getClass().getResource("JFX.css");
+		String css = url.toExternalForm(); 
+	    scene.getStylesheets().add(css);
+		
 		//scene.getStylesheets().add("JFX.css");
 
 		// Declare the canvas
@@ -263,8 +269,8 @@ public class JFXPaint extends Application {
 
 		Label toolLabel = new Label("Tools:");
 
-		double fitW = 30.0;
-		double fitH = 30.0;
+		double fitW = 45.0;
+		double fitH = 45.0;
 		
 		Image brushImage = new Image(getClass().getResourceAsStream("/icons/brush.png"));
 		ImageView scaledBrush = new ImageView(brushImage);
