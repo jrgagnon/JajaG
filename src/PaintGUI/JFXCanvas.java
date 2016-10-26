@@ -240,6 +240,12 @@ public class JFXCanvas {
 		}
 
 	}
+	
+	public void changeToolSize(GraphicsContext gc, double size){
+		
+		gc.setLineWidth(size);
+		
+	}
 
 	public void imageDraw(GraphicsContext gc, Canvas canvas, Image image) {
 		double imageWidth = image.getWidth();
