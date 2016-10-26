@@ -3,6 +3,7 @@ package PaintGUI;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.IOException;
+import java.net.URL;
 
 import javax.imageio.ImageIO;
 import javax.swing.GroupLayout.Alignment;
@@ -55,7 +56,7 @@ public class JFXPaint extends Application {
 
 	public double fitW = 40.0;
 	public double fitH = 40.0;
-	
+
 	public double toolSize = 1.00;
 
 	public static void main(String[] args) {
@@ -66,9 +67,13 @@ public class JFXPaint extends Application {
 
 		Scene scene = new Scene(new Group());
 		stage.setTitle("JFXPaint");
-		 stage.setWidth(800);
-		 stage.setHeight(600);
-		//stage.setMaximized(true);
+		stage.setWidth(800);
+		stage.setHeight(600);
+		// stage.setMaximized(true);
+
+		URL url = this.getClass().getResource("JFX.css");
+		String css = url.toExternalForm();
+		scene.getStylesheets().add(css);
 
 		// Declare the canvas
 		JFXCanvas jc = new JFXCanvas();
@@ -77,36 +82,38 @@ public class JFXPaint extends Application {
 		jc.draw(gc, canvas);
 
 		// Line Size Chooser
-		
-//		ChoiceBox lineSize = new ChoiceBox(FXCollections.observableArrayList("1pt", "25pt", "50pt", "100pt"));
-//
-//		lineSize.getSelectionModel().select(0);
-//
-//		lineSize.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-//
-//			public void changed(ObservableValue ov, Number value, Number new_value) {
-//				jc.lineSize = new_value.intValue();
-//				jc.changeLineSize(gc);
-//			}
-//
-//		});
-		
-		//new tool size
+
+		// ChoiceBox lineSize = new
+		// ChoiceBox(FXCollections.observableArrayList("1pt", "25pt", "50pt",
+		// "100pt"));
+		//
+		// lineSize.getSelectionModel().select(0);
+		//
+		// lineSize.getSelectionModel().selectedIndexProperty().addListener(new
+		// ChangeListener<Number>() {
+		//
+		// public void changed(ObservableValue ov, Number value, Number
+		// new_value) {
+		// jc.lineSize = new_value.intValue();
+		// jc.changeLineSize(gc);
+		// }
+		//
+		// });
+
+		// new tool size
 		NumberTextField toolSizeTxt = new NumberTextField();
 		toolSizeTxt.setPrefSize(50, 30);
 		toolSizeTxt.setAlignment(Pos.BASELINE_RIGHT);
 		toolSizeTxt.textProperty().addListener((observable, oldValue, newValue) -> {
-			try
-			{
+			try {
 				toolSize = Double.parseDouble(newValue);
 				jc.changeToolSize(gc, toolSize);
+			} catch (Exception e) {
+
 			}
-		    catch(Exception e){
-		    	
-		    }
 		});
 		toolSizeTxt.setText("1.0");
-		
+
 		Button addSize = new Button("+");
 		addSize.setPrefSize(30, 30);
 		addSize.setOnAction(new EventHandler<ActionEvent>() {
@@ -117,20 +124,19 @@ public class JFXPaint extends Application {
 				toolSizeTxt.setText(String.valueOf(toolSize));
 			}
 		});
-		
+
 		Button subSize = new Button("-");
 		subSize.setPrefSize(30, 30);
 		subSize.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent t) {
-				if(toolSize > 1){
+				if (toolSize > 1) {
 					toolSize--;
 					toolSizeTxt.setText(String.valueOf(toolSize));
-				}				
+				}
 			}
 		});
-		
 
 		// Changes the size of the canvas when the window resizes
 		scene.widthProperty().addListener(new ChangeListener<Number>() {
@@ -165,20 +171,20 @@ public class JFXPaint extends Application {
 					int tool = (int) tools.getSelectedToggle().getUserData();
 					switch (tool) {
 					case 0:
-						//lineSize.getSelectionModel().select(0);
+						// lineSize.getSelectionModel().select(0);
 						jc.tool = 0;
 						break;
 					case 1:
-						//lineSize.getSelectionModel().select(0);
+						// lineSize.getSelectionModel().select(0);
 						jc.tool = 1;
 						break;
 					case 2:
-						//lineSize.getSelectionModel().select(0);
+						// lineSize.getSelectionModel().select(0);
 						jc.tool = 2;
 						break;
 					case 3:
 						jc.tool = 3;
-						//lineSize.getSelectionModel().select(2);
+						// lineSize.getSelectionModel().select(2);
 						break;
 					default:
 						System.out.println("Default");
@@ -248,10 +254,8 @@ public class JFXPaint extends Application {
 				FileChooser.ExtensionFilter imageExtensions = new FileChooser.ExtensionFilter("all images", "*.jpg",
 						"*.png", "*.JPG", "*.PNG", "*.jpeg", ".JPEG");
 
-
 				FileChooser.ExtensionFilter extFilterjpg = new FileChooser.ExtensionFilter("jpg files (*.jpg)", "*.jpg",
 						"*.JPG", "*.jpeg", ".JPEG");
-
 
 				FileChooser.ExtensionFilter extFilterpng = new FileChooser.ExtensionFilter("png files (*.png)", "*.png",
 						"*.PNG");
@@ -363,7 +367,7 @@ public class JFXPaint extends Application {
 
 		tray.getChildren().add(colorPicker);
 		// tray.getChildren().add(clearBtn);
-		//tray.getChildren().add(lineSize);
+		// tray.getChildren().add(lineSize);
 		tray.getChildren().add(subSize);
 		tray.getChildren().add(toolSizeTxt);
 		tray.getChildren().add(addSize);
