@@ -6,6 +6,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 public class JFXCanvas {
 
@@ -16,6 +17,7 @@ public class JFXCanvas {
 	protected double endX = 0.0;
 	protected double endY = 0.0;
 
+	Paint p = Color.BLACK;
 	protected int pressed = 0;
 	protected boolean eraser = false;
 
@@ -105,6 +107,9 @@ public class JFXCanvas {
 			drawCircle(gc, canvas);
 			break;
 		case 3:
+			if(!eraser){
+				saveColor(gc);
+			}
 			eraser = true;
 			erase(gc, canvas);
 			break;
@@ -213,7 +218,8 @@ public class JFXCanvas {
 			gc.lineTo(curX, curY);
 			gc.stroke();
 		} else if (pressed == 0 && eraser) {
-			gc.setStroke(Color.BLACK);
+			//gc.setStroke(Color.BLACK);
+			gc.setStroke(p);
 		}
 
 	}
@@ -240,26 +246,30 @@ public class JFXCanvas {
 		}
 
 	}
-	
-	public void changeToolSize(GraphicsContext gc, double size){
-		
+
+	public void changeToolSize(GraphicsContext gc, double size) {
+
 		gc.setLineWidth(size);
-		
+
 	}
 
 	public void imageDraw(GraphicsContext gc, Canvas canvas, Image image) {
 		double imageWidth = image.getWidth();
 		double imageHeight = image.getHeight();
-		
+
 		double canvasWidth = canvas.getWidth();
 		double canvasHeight = canvas.getHeight();
-		
-		if((imageWidth > canvasWidth) || (imageHeight > canvasHeight)){
-			gc.drawImage(image, 0, 0,canvasWidth, canvasHeight);
+
+		if ((imageWidth > canvasWidth) || (imageHeight > canvasHeight)) {
+			gc.drawImage(image, 0, 0, canvasWidth, canvasHeight);
 		} else {
-			gc.drawImage(image, 0, 0,imageWidth, imageHeight);
-		}		
-		
+			gc.drawImage(image, 0, 0, imageWidth, imageHeight);
+		}
+
+	}
+
+	public void saveColor(GraphicsContext gc) {
+		p = gc.getStroke();
 	}
 
 }

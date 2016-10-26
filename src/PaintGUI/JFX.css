@@ -1,0 +1,11 @@
+.root {
+	-fx-base: rgb(100, 100, 100);
+}
+
+.color-picker {
+	-fx-color-label-visible: false
+}
+
+.button {
+	-fx-backround-color: #000000
+}
