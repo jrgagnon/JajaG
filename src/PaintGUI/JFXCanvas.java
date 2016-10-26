@@ -6,6 +6,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 public class JFXCanvas {
 
@@ -16,6 +17,7 @@ public class JFXCanvas {
 	protected double endX = 0.0;
 	protected double endY = 0.0;
 
+	Paint p = Color.BLACK;
 	protected int pressed = 0;
 	protected boolean eraser = false;
 
@@ -105,6 +107,9 @@ public class JFXCanvas {
 			drawCircle(gc, canvas);
 			break;
 		case 3:
+			if(!eraser){
+				saveColor(gc);
+			}			
 			eraser = true;
 			erase(gc, canvas);
 			break;
@@ -164,7 +169,7 @@ public class JFXCanvas {
 
 	}
 
-	// Circle Tool Called when tool == 1
+	// Circle Tool Called when tool == 2
 	public void drawCircle(GraphicsContext gc, Canvas canvas) {
 
 		if (pressed == 0) {
@@ -197,9 +202,9 @@ public class JFXCanvas {
 
 	}
 
-	// Eraser Tool Called when tool == 1
+	// Eraser Tool Called when tool == 3
 	public void erase(GraphicsContext gc, Canvas canvas) {
-
+		
 		gc.setStroke(Color.WHITE);
 
 		// Start the path from the new mouse location on click
@@ -213,7 +218,8 @@ public class JFXCanvas {
 			gc.lineTo(curX, curY);
 			gc.stroke();
 		} else if (pressed == 0 && eraser) {
-			gc.setStroke(Color.BLACK);
+			//gc.setStroke(Color.BLACK);
+			gc.setStroke(p);
 		}
 
 	}
@@ -254,6 +260,10 @@ public class JFXCanvas {
 			gc.drawImage(image, 0, 0,imageWidth, imageHeight);
 		}		
 		
+	}
+	
+	public void saveColor(GraphicsContext gc){
+		p = gc.getStroke();
 	}
 
 }

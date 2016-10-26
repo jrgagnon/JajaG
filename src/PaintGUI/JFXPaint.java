@@ -35,6 +35,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.io.File;
@@ -257,7 +258,7 @@ public class JFXPaint extends Application {
 		});
 
 		// Declare the color picker
-		final ColorPicker colorPicker = new ColorPicker();
+		final ColorPicker colorPicker = new ColorPicker(Color.BLACK);
 
 		// Event that calls the change color method when the color pickers color
 		// is changed
