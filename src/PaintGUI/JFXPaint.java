@@ -151,7 +151,7 @@ public class JFXPaint extends Application {
 			@Override
 			public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight,
 					Number newSceneHeight) {
-				ch = ((double) newSceneHeight - 120.0);
+				ch = ((double) newSceneHeight - 130.0);
 				canvas.setHeight(ch);
 			}
 		});
@@ -304,6 +304,7 @@ public class JFXPaint extends Application {
 
 		// Declare the color picker
 		final ColorPicker colorPicker = new ColorPicker();
+		colorPicker.setPrefHeight(30);
 
 		// Event that calls the change color method when the color pickers color
 		// is changed
@@ -321,10 +322,11 @@ public class JFXPaint extends Application {
 		scaledBrush.setFitWidth(fitW);
 
 		ToggleButton drawLineBtn = new ToggleButton(null, scaledBrush);
+		drawLineBtn.setPadding(Insets.EMPTY);
 		drawLineBtn.setToggleGroup(tools);
 		drawLineBtn.setUserData(0);
 		drawLineBtn.setSelected(true);
-		drawLineBtn.setStyle("-fx-base: lightgreen;");
+		//drawLineBtn.setStyle("-fx-base: lightgreen;");
 
 		Image rectImage = new Image(getClass().getResourceAsStream("/icons/square.png"));
 		ImageView scaledRect = new ImageView(rectImage);
@@ -332,9 +334,10 @@ public class JFXPaint extends Application {
 		scaledRect.setFitWidth(fitW);
 
 		ToggleButton rectButton = new ToggleButton(null, scaledRect);
+		rectButton.setPadding(Insets.EMPTY);
 		rectButton.setToggleGroup(tools);
 		rectButton.setUserData(1);
-		rectButton.setStyle("-fx-base: lightblue;");
+		//rectButton.setStyle("-fx-base: lightblue;");
 
 		Image circleImage = new Image(getClass().getResourceAsStream("/icons/circle.png"));
 		ImageView scaledCircle = new ImageView(circleImage);
@@ -342,9 +345,10 @@ public class JFXPaint extends Application {
 		scaledCircle.setFitWidth(fitW);
 
 		ToggleButton circleBtn = new ToggleButton(null, scaledCircle);
+		circleBtn.setPadding(Insets.EMPTY);
 		circleBtn.setToggleGroup(tools);
 		circleBtn.setUserData(2);
-		circleBtn.setStyle("-fx-base: plum;");
+		//circleBtn.setStyle("-fx-base: plum;");
 
 		Image eraserImage = new Image(getClass().getResourceAsStream("/icons/eraser.png"));
 		ImageView scaledEraser = new ImageView(eraserImage);
@@ -352,9 +356,10 @@ public class JFXPaint extends Application {
 		scaledEraser.setFitWidth(fitW);
 
 		ToggleButton eraserBtn = new ToggleButton(null, scaledEraser);
+		eraserBtn.setPadding(Insets.EMPTY);
 		eraserBtn.setToggleGroup(tools);
 		eraserBtn.setUserData(3);
-		eraserBtn.setStyle("-fx-base: salmon;");
+		//eraserBtn.setStyle("-fx-base: salmon;");
 
 		HBox toolBox = new HBox();
 
@@ -379,7 +384,7 @@ public class JFXPaint extends Application {
 		vbox.getChildren().add(toolBox);
 		vbox.getChildren().add(canvas);
 		vbox.getChildren().add(tray);
-		vbox.setPadding(new Insets(5, 10, 5, 10));
+		vbox.setPadding(new Insets(0, 10, 0, 10));
 
 		((Group) scene.getRoot()).getChildren().add(vbox);
 		stage.setScene(scene);
