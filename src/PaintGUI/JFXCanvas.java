@@ -1,6 +1,9 @@
 package PaintGUI;
 
 import javafx.event.EventHandler;
+import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
+import javafx.scene.image.Image;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
@@ -200,6 +203,21 @@ public class JFXCanvas {
 	public void erase(GraphicsContext gc, Canvas canvas) {
 
 		gc.setStroke(Color.WHITE);
+
+		Image size25 = new Image("/PaintGUI/CustomCursors/EraserCursor25.png");
+		Image size50 = new Image("/PaintGUI/CustomCursors/EraserCursor50.png");
+		Image size100 = new Image("/PaintGUI/CustomCursors/EraserCursor100.png");
+
+		// Adjust cursor based on line width
+		if (gc.getLineWidth() == 1.0)
+            canvas.setCursor(Cursor.CROSSHAIR);
+
+		else if (gc.getLineWidth() == 25.0)
+            canvas.setCursor(new ImageCursor(size25) );
+		else if (gc.getLineWidth() == 50.0)
+			canvas.setCursor(new ImageCursor(size50) );
+		else if (gc.getLineWidth() == 100.0)
+			canvas.setCursor(new ImageCursor(size100) );
 
 		// Start the path from the new mouse location on click
 		if (pressed == 1) {
