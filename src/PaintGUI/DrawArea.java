@@ -55,7 +55,8 @@ public class DrawArea extends JComponent {
 	          {
 				shapeX = m.getX();
 				shapeY = m.getY();
-	            repaint();	            
+	            repaint();	       
+	            
 	          }
 
 		});

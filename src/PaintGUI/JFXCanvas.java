@@ -1,9 +1,22 @@
 package PaintGUI;
 
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.RenderedImage;
+import java.awt.image.WritableRaster;
+import java.io.IOException;
+import java.util.Hashtable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.imageio.ImageIO;
+
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
@@ -21,7 +34,9 @@ public class JFXCanvas {
 
 	public int tool = 0;
 	public int lineSize = 0;
-
+	
+	Stack stack = new Stack(); // contains images
+	
 	public void draw(GraphicsContext gc, Canvas canvas) {
 
 		// Add Mouse Click Event
@@ -62,6 +77,14 @@ public class JFXCanvas {
 				pressed = 0;
 				tool(gc, canvas);
 
+				/* Add buffered image to stack for undo functionality */
+				System.out.println("Mouse released"); //TODO
+				
+				WritableImage writableImage = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
+				canvas.snapshot(null, writableImage);
+			
+				Image image = writableImage; // WritableImage extends Image, but probly not sufficient
+				stack.push(image);
 			}
 		});
 
@@ -207,6 +230,8 @@ public class JFXCanvas {
 			gc.beginPath();
 			gc.moveTo(oldX, oldY);
 			gc.stroke();
+			
+
 
 			// Erase a path if the mouse is dragged
 		} else if (pressed == 2) {
@@ -254,6 +279,15 @@ public class JFXCanvas {
 			gc.drawImage(image, 0, 0,imageWidth, imageHeight);
 		}		
 		
+	}
+	
+	public void undo(GraphicsContext gc, Canvas canvas){
+		System.out.println("Undo");
+		Image im = stack.pop();
+		if(im != null){
+			imageDraw(gc, canvas, im);
+		}
+			
 	}
 
 }
