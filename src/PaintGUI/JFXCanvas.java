@@ -23,6 +23,7 @@ public class JFXCanvas {
 
 	public int tool = 0;
 	public int lineSize = 0;
+	String textString = "";
 
 	public void draw(GraphicsContext gc, Canvas canvas) {
 
@@ -113,6 +114,12 @@ public class JFXCanvas {
 			eraser = true;
 			erase(gc, canvas);
 			break;
+		case 4:
+			
+			break;
+		case 5:
+			textDraw(gc);
+			break;		
 		default:
 			System.out.println("Default");
 			break;
@@ -267,9 +274,20 @@ public class JFXCanvas {
 		}
 
 	}
+	
+	public void textDraw(GraphicsContext gc){
+		if(pressed == 1 && textString != null){
+			gc.strokeText(textString, oldX, oldY);
+		}
+		
+	}
 
 	public void saveColor(GraphicsContext gc) {
 		p = gc.getStroke();
+	}
+
+	public void setText(String text) {
+		textString = text;		
 	}
 
 }

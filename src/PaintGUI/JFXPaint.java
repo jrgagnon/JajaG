@@ -29,6 +29,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
@@ -137,6 +138,9 @@ public class JFXPaint extends Application {
 				}
 			}
 		});
+		
+		TextField textBox = new TextField();
+		textBox.setPrefSize(200, 30);
 
 		// Changes the size of the canvas when the window resizes
 		scene.widthProperty().addListener(new ChangeListener<Number>() {
@@ -185,6 +189,12 @@ public class JFXPaint extends Application {
 					case 3:
 						jc.tool = 3;
 						// lineSize.getSelectionModel().select(2);
+					case 4:
+						jc.tool = 4;
+						break;
+					case 5:
+						jc.tool = 5;
+						jc.setText(textBox.getText());
 						break;
 					default:
 						System.out.println("Default");
@@ -360,6 +370,16 @@ public class JFXPaint extends Application {
 		eraserBtn.setToggleGroup(tools);
 		eraserBtn.setUserData(3);
 		//eraserBtn.setStyle("-fx-base: salmon;");
+		
+		Image penguinImage = new Image(getClass().getResourceAsStream("/icons/penguin_2.png"));
+		ImageView scaledPenguin = new ImageView(penguinImage);
+		scaledPenguin.setFitHeight(fitH);
+		scaledPenguin.setFitWidth(fitW);
+		
+		ToggleButton textBtn = new ToggleButton(null, scaledPenguin);
+		textBtn.setPadding(Insets.EMPTY);
+		textBtn.setToggleGroup(tools);
+		textBtn.setUserData(5);
 
 		HBox toolBox = new HBox();
 
@@ -367,6 +387,8 @@ public class JFXPaint extends Application {
 		toolBox.getChildren().add(rectButton);
 		toolBox.getChildren().add(circleBtn);
 		toolBox.getChildren().add(eraserBtn);
+		toolBox.getChildren().add(textBtn);
+		
 
 		HBox tray = new HBox();
 
@@ -376,7 +398,8 @@ public class JFXPaint extends Application {
 		tray.getChildren().add(subSize);
 		tray.getChildren().add(toolSizeTxt);
 		tray.getChildren().add(addSize);
-
+		tray.getChildren().add(textBox);
+		
 		VBox vbox = new VBox();
 
 		vbox.getChildren().add(menuBar);
