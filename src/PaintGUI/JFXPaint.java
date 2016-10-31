@@ -6,12 +6,9 @@ import java.io.IOException;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
-import javax.swing.GroupLayout.Alignment;
-
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -23,7 +20,6 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
@@ -33,6 +29,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
@@ -67,7 +64,8 @@ public class JFXPaint extends Application {
 	public void start(Stage stage) {
 
 		Scene scene = new Scene(new Group());
-		stage.setTitle("JFXPaint");
+		stage.setTitle("Penguin Paint");
+		stage.getIcons().add(new Image("/icons/penguin_2.png"));
 		stage.setWidth(800);
 		stage.setHeight(600);
 		// stage.setMaximized(true);
@@ -141,7 +139,20 @@ public class JFXPaint extends Application {
 		
 		TextField textBox = new TextField();
 		textBox.setPrefSize(200, 30);
+		textBox.setOnAction(new EventHandler<ActionEvent>() {
+		    @Override public void handle(ActionEvent event) {
+		        jc.setText(textBox.getText());
+		    }     
+		});
+		
+		final Tooltip textTooltip = new Tooltip();
+		textTooltip.setText(
+		    "Press Enter to confirm text"
+		);
 
+		textBox.setTooltip(textTooltip);
+		textBox.setVisible(false);
+		
 		// Changes the size of the canvas when the window resizes
 		scene.widthProperty().addListener(new ChangeListener<Number>() {
 			@Override
@@ -189,11 +200,13 @@ public class JFXPaint extends Application {
 					case 3:
 						jc.tool = 3;
 						// lineSize.getSelectionModel().select(2);
+						break;
 					case 4:
 						jc.tool = 4;
 						break;
 					case 5:
 						jc.tool = 5;
+						textBox.setVisible(true);
 						jc.setText(textBox.getText());
 						break;
 					default:
