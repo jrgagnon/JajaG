@@ -372,6 +372,16 @@ public class JFXPaint extends Application {
 		eraserBtn.setToggleGroup(tools);
 		eraserBtn.setUserData(3);
 		//eraserBtn.setStyle("-fx-base: salmon;");
+		
+		Image fillImage = new Image(getClass().getResourceAsStream("/icons/fill.png"));
+		ImageView scaledFill = new ImageView(fillImage);
+		scaledFill.setFitHeight(fitH);
+		scaledFill.setFitWidth(fitW);
+
+		ToggleButton fillBtn = new ToggleButton(null, scaledFill);
+		fillBtn.setPadding(Insets.EMPTY);
+		fillBtn.setToggleGroup(tools);
+		fillBtn.setUserData(4);
 
 		HBox toolBox = new HBox();
 
@@ -379,6 +389,7 @@ public class JFXPaint extends Application {
 		toolBox.getChildren().add(rectButton);
 		toolBox.getChildren().add(circleBtn);
 		toolBox.getChildren().add(eraserBtn);
+		toolBox.getChildren().add(fillBtn);
 
 		HBox tray = new HBox();
 

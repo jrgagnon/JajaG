@@ -248,6 +248,12 @@ public class JFXCanvas {
 		}
 
 	}
+	
+	public void fill(GraphicsContext gc){
+		
+		
+		
+	}
 
 	public void changeLineSize(GraphicsContext gc) {
 
