@@ -202,10 +202,11 @@ public class JFXPaint extends Application {
 
 		// --- File Menu Option
 		Menu menuFile = new Menu("File");
+		Menu menuEdit = new Menu("Edit");
 
 		// Adds the menu options to the menu bar
 		// just , (menuoption) in the addAll to add
-		menuBar.getMenus().addAll(menuFile);
+		menuBar.getMenus().addAll(menuFile, menuEdit);
 
 		// Save Option
 		MenuItem save = new MenuItem("Save");
@@ -289,9 +290,20 @@ public class JFXPaint extends Application {
 				jc.clear(gc, canvas);
 			}
 		});
+		
+		// Undo option TODO
+		MenuItem undo = new MenuItem("Undo");
+		undo.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent t) {
+				jc.undo(gc, canvas);
+			}
+		});
 
 		// Add menu options to file portion of the menu bar
 		menuFile.getItems().addAll(clear, open, save);
+		menuEdit.getItems().addAll(undo);
 
 		Button clearBtn = new Button("Clear");
 		clearBtn.setOnAction(new EventHandler<ActionEvent>() {
