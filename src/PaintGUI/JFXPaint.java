@@ -35,6 +35,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.io.File;
@@ -188,26 +189,30 @@ public class JFXPaint extends Application {
 					case 0:
 						// lineSize.getSelectionModel().select(0);
 						jc.tool = 0;
+						textBox.setVisible(false);
 						break;
 					case 1:
 						// lineSize.getSelectionModel().select(0);
 						jc.tool = 1;
+						textBox.setVisible(false);
 						break;
 					case 2:
 						// lineSize.getSelectionModel().select(0);
 						jc.tool = 2;
+						textBox.setVisible(false);
 						break;
 					case 3:
 						jc.tool = 3;
 						// lineSize.getSelectionModel().select(2);
+						textBox.setVisible(false);
 						break;
 					case 4:
 						jc.tool = 4;
+						textBox.setVisible(false);
 						break;
 					case 5:
 						jc.tool = 5;
 						textBox.setVisible(true);
-						jc.setText(textBox.getText());
 						break;
 					default:
 						System.out.println("Default");
@@ -326,7 +331,8 @@ public class JFXPaint extends Application {
 		});
 
 		// Declare the color picker
-		final ColorPicker colorPicker = new ColorPicker();
+		//final ColorPicker colorPicker = new ColorPicker();
+		final ColorPicker colorPicker = new ColorPicker(Color.BLACK);
 		colorPicker.setPrefHeight(30);
 
 		// Event that calls the change color method when the color pickers color
