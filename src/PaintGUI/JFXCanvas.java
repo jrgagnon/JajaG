@@ -1,13 +1,27 @@
 package PaintGUI;
 
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.RenderedImage;
+import java.awt.image.WritableRaster;
+import java.io.IOException;
+import java.util.Hashtable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.imageio.ImageIO;
+
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
-import javafx.scene.image.Image;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 public class JFXCanvas {
 
@@ -18,12 +32,15 @@ public class JFXCanvas {
 	protected double endX = 0.0;
 	protected double endY = 0.0;
 
+	Paint p = Color.BLACK;
 	protected int pressed = 0;
 	protected boolean eraser = false;
 
 	public int tool = 0;
 	public int lineSize = 0;
-
+	
+	Stack stack = new Stack(); // contains images
+	
 	public void draw(GraphicsContext gc, Canvas canvas) {
 
 		// Add Mouse Click Event
@@ -64,6 +81,14 @@ public class JFXCanvas {
 				pressed = 0;
 				tool(gc, canvas);
 
+				/* Add buffered image to stack for undo functionality */
+				System.out.println("Mouse released"); //TODO
+				
+				WritableImage writableImage = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
+				canvas.snapshot(null, writableImage);
+			
+				Image image = writableImage; // WritableImage extends Image, but probly not sufficient
+				stack.push(image);
 			}
 		});
 
@@ -107,6 +132,9 @@ public class JFXCanvas {
 			drawCircle(gc, canvas);
 			break;
 		case 3:
+			if(!eraser){
+				saveColor(gc);
+			}
 			eraser = true;
 			erase(gc, canvas);
 			break;
@@ -119,6 +147,7 @@ public class JFXCanvas {
 
 	// Line Tool Called when tool == 0
 	public void drawLine(GraphicsContext gc, Canvas canvas) {
+		canvas.setCursor(Cursor.CROSSHAIR); // Default cursor
 
 		// Start the path from the new mouse location on click
 		if (pressed == 1) {
@@ -136,6 +165,8 @@ public class JFXCanvas {
 
 	// Rectangle Tool Called when tool == 1
 	public void drawRect(GraphicsContext gc, Canvas canvas) {
+		canvas.setCursor(Cursor.CROSSHAIR); // Default cursor
+
 		if (pressed == 0) {
 			// find lowest x and y, then gain shape size
 			double length;
@@ -168,6 +199,7 @@ public class JFXCanvas {
 
 	// Circle Tool Called when tool == 1
 	public void drawCircle(GraphicsContext gc, Canvas canvas) {
+		canvas.setCursor(Cursor.CROSSHAIR); // Default cursor
 
 		if (pressed == 0) {
 			// find lowest x and y, then gain shape size
@@ -204,20 +236,16 @@ public class JFXCanvas {
 
 		gc.setStroke(Color.WHITE);
 
-		Image size25 = new Image("/PaintGUI/CustomCursors/EraserCursor25.png");
-		Image size50 = new Image("/PaintGUI/CustomCursors/EraserCursor50.png");
-		Image size100 = new Image("/PaintGUI/CustomCursors/EraserCursor100.png");
-
 		// Adjust cursor based on line width
-		if (gc.getLineWidth() == 1.0)
-            canvas.setCursor(Cursor.CROSSHAIR);
+		if (gc.getLineWidth() < 5)
+			canvas.setCursor(Cursor.CROSSHAIR);
 
-		else if (gc.getLineWidth() == 25.0)
-            canvas.setCursor(new ImageCursor(size25) );
-		else if (gc.getLineWidth() == 50.0)
-			canvas.setCursor(new ImageCursor(size50) );
-		else if (gc.getLineWidth() == 100.0)
-			canvas.setCursor(new ImageCursor(size100) );
+		// If the stroke size >= 5, use custom eraser image
+		else if (gc.getLineWidth() >= 5) {
+			Image eraser = new Image("/PaintGUI/CustomCursors/EraserCursor5.png",
+					gc.getLineWidth(), gc.getLineWidth(), true, false);
+			canvas.setCursor(new ImageCursor(eraser) );
+		}
 
 		// Start the path from the new mouse location on click
 		if (pressed == 1) {
@@ -230,7 +258,8 @@ public class JFXCanvas {
 			gc.lineTo(curX, curY);
 			gc.stroke();
 		} else if (pressed == 0 && eraser) {
-			gc.setStroke(Color.BLACK);
+			//gc.setStroke(Color.BLACK);
+			gc.setStroke(p);
 		}
 
 	}
@@ -256,6 +285,40 @@ public class JFXCanvas {
 
 		}
 
+	}
+
+	public void changeToolSize(GraphicsContext gc, double size) {
+
+		gc.setLineWidth(size);
+
+	}
+
+	public void imageDraw(GraphicsContext gc, Canvas canvas, Image image) {
+		double imageWidth = image.getWidth();
+		double imageHeight = image.getHeight();
+
+		double canvasWidth = canvas.getWidth();
+		double canvasHeight = canvas.getHeight();
+
+		if ((imageWidth > canvasWidth) || (imageHeight > canvasHeight)) {
+			gc.drawImage(image, 0, 0, canvasWidth, canvasHeight);
+		} else {
+			gc.drawImage(image, 0, 0, imageWidth, imageHeight);
+		}
+
+	}
+
+	public void saveColor(GraphicsContext gc) {
+		p = gc.getStroke();
+	}
+	
+	public void undo(GraphicsContext gc, Canvas canvas){
+		System.out.println("Undo");
+		Image im = stack.pop();
+		if(im != null){
+			imageDraw(gc, canvas, im);
+		}
+			
 	}
 
 }
