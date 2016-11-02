@@ -65,6 +65,7 @@ public class JFXPaint extends Application {
 	public void start(Stage stage) {
 
 		Scene scene = new Scene(new Group());
+		stage.setTitle("JFXPaint");
 		stage.setTitle("Penguin Paint");
 		stage.getIcons().add(new Image("/icons/penguin_2.png"));
 		stage.setWidth(800);
