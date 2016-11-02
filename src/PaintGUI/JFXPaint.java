@@ -137,23 +137,24 @@ public class JFXPaint extends Application {
 				}
 			}
 		});
-		
+
+		// textbox for the text tool
 		TextField textBox = new TextField();
 		textBox.setPrefSize(200, 30);
 		textBox.setOnAction(new EventHandler<ActionEvent>() {
-		    @Override public void handle(ActionEvent event) {
-		        jc.setText(textBox.getText());
-		    }     
+			@Override
+			public void handle(ActionEvent event) {
+				jc.setText(textBox.getText());
+			}
 		});
-		
+
+		// Tooltip for the textbox
 		final Tooltip textTooltip = new Tooltip();
-		textTooltip.setText(
-		    "Press Enter to confirm text"
-		);
+		textTooltip.setText("Press Enter to confirm text");
 
 		textBox.setTooltip(textTooltip);
 		textBox.setVisible(false);
-		
+
 		// Changes the size of the canvas when the window resizes
 		scene.widthProperty().addListener(new ChangeListener<Number>() {
 			@Override
@@ -163,6 +164,7 @@ public class JFXPaint extends Application {
 				canvas.setWidth(cw);
 			}
 		});
+
 		scene.heightProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight,
@@ -224,7 +226,7 @@ public class JFXPaint extends Application {
 			}
 		});
 
-		// Beggining of Menu Bar Section
+		// Beginning of Menu Bar Section
 		// Create Menu
 		MenuBar menuBar = new MenuBar();
 
@@ -273,40 +275,55 @@ public class JFXPaint extends Application {
 
 		// Open Option
 		MenuItem open = new MenuItem("Open");
+
 		open.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
-			public void handle(ActionEvent t) {
-				FileChooser fileChooser = new FileChooser();
-
-				FileChooser.ExtensionFilter imageExtensions = new FileChooser.ExtensionFilter("all images", "*.jpg",
-						"*.png", "*.JPG", "*.PNG", "*.jpeg", ".JPEG");
-
-				FileChooser.ExtensionFilter extFilterjpg = new FileChooser.ExtensionFilter("jpg files (*.jpg)", "*.jpg",
-						"*.JPG", "*.jpeg", ".JPEG");
-
-				FileChooser.ExtensionFilter extFilterpng = new FileChooser.ExtensionFilter("png files (*.png)", "*.png",
-						"*.PNG");
-				fileChooser.getExtensionFilters().addAll(imageExtensions, extFilterjpg, extFilterpng);
-				// Show open file dialog
-				File file = fileChooser.showOpenDialog(null);
-
-				if (file == null) {
+			public void handle(ActionEvent arg0) {
+				Image image = openImage();
+				if (image == null) {
 					// Do Nothing
 				} else {
-
-					try {
-						BufferedImage bufferedImage = ImageIO.read(file);
-						Image image = SwingFXUtils.toFXImage(bufferedImage, null);
-						jc.imageDraw(gc, canvas, image);
-					} catch (IOException ex) {
-						Logger.getLogger(JFXPaint.class.getName()).log(Level.SEVERE, null, ex);
-					}
+					jc.imageDraw(gc, canvas, image);
 				}
 
 			}
 
 		});
+
+		/**
+		 * open.setOnAction(new EventHandler<ActionEvent>() {
+		 * 
+		 * @Override public void handle(ActionEvent t) { FileChooser fileChooser
+		 *           = new FileChooser();
+		 * 
+		 *           FileChooser.ExtensionFilter imageExtensions = new
+		 *           FileChooser.ExtensionFilter("all images", "*.jpg", "*.png",
+		 *           "*.JPG", "*.PNG", "*.jpeg", ".JPEG");
+		 * 
+		 *           FileChooser.ExtensionFilter extFilterjpg = new
+		 *           FileChooser.ExtensionFilter("jpg files (*.jpg)", "*.jpg",
+		 *           "*.JPG", "*.jpeg", ".JPEG");
+		 * 
+		 *           FileChooser.ExtensionFilter extFilterpng = new
+		 *           FileChooser.ExtensionFilter("png files (*.png)", "*.png",
+		 *           "*.PNG");
+		 *           fileChooser.getExtensionFilters().addAll(imageExtensions,
+		 *           extFilterjpg, extFilterpng); // Show open file dialog File
+		 *           file = fileChooser.showOpenDialog(null);
+		 * 
+		 *           if (file == null) { // Do Nothing } else {
+		 * 
+		 *           try { BufferedImage bufferedImage = ImageIO.read(file);
+		 *           Image image = SwingFXUtils.toFXImage(bufferedImage, null);
+		 *           jc.imageDraw(gc, canvas, image); } catch (IOException ex) {
+		 *           Logger.getLogger(JFXPaint.class.getName()).log(Level.SEVERE,
+		 *           null, ex); } }
+		 * 
+		 *           }
+		 * 
+		 *           });
+		 **/
 
 		// Clear Option
 		MenuItem clear = new MenuItem("New");
@@ -321,17 +338,16 @@ public class JFXPaint extends Application {
 		// Add menu options to file portion of the menu bar
 		menuFile.getItems().addAll(clear, open, save);
 
-		Button clearBtn = new Button("Clear");
-		clearBtn.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent t) {
-				jc.clear(gc, canvas);
-			}
-		});
+		/**
+		 * Button clearBtn = new Button("Clear"); clearBtn.setOnAction(new
+		 * EventHandler<ActionEvent>() {
+		 * 
+		 * @Override public void handle(ActionEvent t) { jc.clear(gc, canvas); }
+		 *           });
+		 **/
 
 		// Declare the color picker
-		//final ColorPicker colorPicker = new ColorPicker();
+		// final ColorPicker colorPicker = new ColorPicker();
 		final ColorPicker colorPicker = new ColorPicker(Color.BLACK);
 		colorPicker.setPrefHeight(30);
 
@@ -345,61 +361,69 @@ public class JFXPaint extends Application {
 
 		Label toolLabel = new Label("Tools:");
 
-		/**Image brushImage = new Image(getClass().getResourceAsStream("/icons/brush.png"));
-		ImageView scaledBrush = new ImageView(brushImage);
-		scaledBrush.setFitHeight(fitH);
-		scaledBrush.setFitWidth(fitW);**/
+		/**
+		 * Image brushImage = new
+		 * Image(getClass().getResourceAsStream("/icons/brush.png")); ImageView
+		 * scaledBrush = new ImageView(brushImage);
+		 * scaledBrush.setFitHeight(fitH); scaledBrush.setFitWidth(fitW);
+		 **/
 
-		//ToggleButton drawLineBtn = new ToggleButton(null, scaledBrush);
+		// ToggleButton drawLineBtn = new ToggleButton(null, scaledBrush);
 		ToggleButton drawLineBtn = new ToggleButton(null, createIcon("/icons/brush.png"));
 		drawLineBtn.setPadding(Insets.EMPTY);
 		drawLineBtn.setToggleGroup(tools);
 		drawLineBtn.setUserData(0);
 		drawLineBtn.setSelected(true);
-		//drawLineBtn.setStyle("-fx-base: lightgreen;");
+		// drawLineBtn.setStyle("-fx-base: lightgreen;");
 
-		/**Image rectImage = new Image(getClass().getResourceAsStream("/icons/square.png"));
-		ImageView scaledRect = new ImageView(rectImage);
-		scaledRect.setFitHeight(fitH);
-		scaledRect.setFitWidth(fitW);**/
+		/**
+		 * Image rectImage = new
+		 * Image(getClass().getResourceAsStream("/icons/square.png")); ImageView
+		 * scaledRect = new ImageView(rectImage); scaledRect.setFitHeight(fitH);
+		 * scaledRect.setFitWidth(fitW);
+		 **/
 
-		//ToggleButton rectButton = new ToggleButton(null, scaledRect);
+		// ToggleButton rectButton = new ToggleButton(null, scaledRect);
 		ToggleButton rectButton = new ToggleButton(null, createIcon("/icons/square.png"));
 		rectButton.setPadding(Insets.EMPTY);
 		rectButton.setToggleGroup(tools);
 		rectButton.setUserData(1);
-		//rectButton.setStyle("-fx-base: lightblue;");
+		// rectButton.setStyle("-fx-base: lightblue;");
 
-		/**Image circleImage = new Image(getClass().getResourceAsStream("/icons/circle.png"));
-		ImageView scaledCircle = new ImageView(circleImage);
-		scaledCircle.setFitHeight(fitH);
-		scaledCircle.setFitWidth(fitW);**/
+		/**
+		 * Image circleImage = new
+		 * Image(getClass().getResourceAsStream("/icons/circle.png")); ImageView
+		 * scaledCircle = new ImageView(circleImage);
+		 * scaledCircle.setFitHeight(fitH); scaledCircle.setFitWidth(fitW);
+		 **/
 
-		//ToggleButton circleBtn = new ToggleButton(null, scaledCircle);
+		// ToggleButton circleBtn = new ToggleButton(null, scaledCircle);
 		ToggleButton circleBtn = new ToggleButton(null, createIcon("/icons/circle.png"));
 		circleBtn.setPadding(Insets.EMPTY);
 		circleBtn.setToggleGroup(tools);
 		circleBtn.setUserData(2);
-		//circleBtn.setStyle("-fx-base: plum;");
+		// circleBtn.setStyle("-fx-base: plum;");
 
-		/**Image eraserImage = new Image(getClass().getResourceAsStream("/icons/eraser.png"));
-		ImageView scaledEraser = new ImageView(eraserImage);
-		scaledEraser.setFitHeight(fitH);
-		scaledEraser.setFitWidth(fitW);**/
+		/**
+		 * Image eraserImage = new
+		 * Image(getClass().getResourceAsStream("/icons/eraser.png")); ImageView
+		 * scaledEraser = new ImageView(eraserImage);
+		 * scaledEraser.setFitHeight(fitH); scaledEraser.setFitWidth(fitW);
+		 **/
 
-		//ToggleButton eraserBtn = new ToggleButton(null, scaledEraser);
+		// ToggleButton eraserBtn = new ToggleButton(null, scaledEraser);
 		ToggleButton eraserBtn = new ToggleButton(null, createIcon("/icons/eraser.png"));
 		eraserBtn.setPadding(Insets.EMPTY);
 		eraserBtn.setToggleGroup(tools);
 		eraserBtn.setUserData(3);
-		//eraserBtn.setStyle("-fx-base: salmon;");
-		
+		// eraserBtn.setStyle("-fx-base: salmon;");
+
 		Image penguinImage = new Image(getClass().getResourceAsStream("/icons/penguin_2.png"));
 		ImageView scaledPenguin = new ImageView(penguinImage);
 		scaledPenguin.setFitHeight(fitH);
 		scaledPenguin.setFitWidth(fitW);
-		
-		//ToggleButton textBtn = new ToggleButton(null, scaledPenguin);
+
+		// ToggleButton textBtn = new ToggleButton(null, scaledPenguin);
 		ToggleButton textBtn = new ToggleButton(null, createIcon("/icons/penguin_2.png"));
 		textBtn.setPadding(Insets.EMPTY);
 		textBtn.setToggleGroup(tools);
@@ -412,7 +436,6 @@ public class JFXPaint extends Application {
 		toolBox.getChildren().add(circleBtn);
 		toolBox.getChildren().add(eraserBtn);
 		toolBox.getChildren().add(textBtn);
-		
 
 		HBox tray = new HBox();
 
@@ -423,7 +446,7 @@ public class JFXPaint extends Application {
 		tray.getChildren().add(toolSizeTxt);
 		tray.getChildren().add(addSize);
 		tray.getChildren().add(textBox);
-		
+
 		VBox vbox = new VBox();
 
 		vbox.getChildren().add(menuBar);
@@ -437,26 +460,66 @@ public class JFXPaint extends Application {
 		stage.setScene(scene);
 		stage.show();
 	}
-	
+
 	/**
 	 * Clears the text in the field and makes it invisible
-	 * @param textBox: the textbox to be reset
+	 * 
+	 * @param textBox:
+	 *            the textbox to be reset
 	 */
-	public void textReset(TextField textBox){
+	public void textReset(TextField textBox) {
 		textBox.clear();
-		textBox.setVisible(false);		
+		textBox.setVisible(false);
 	}
 
 	/**
 	 * Creates a scaled image for use as an icon
-	 * @param location: the file location of the image to be scaled
+	 * 
+	 * @param location:
+	 *            the file location of the image to be scaled
 	 * @return a scaled image for use as an icon
 	 */
-	public ImageView createIcon(String location){		
+	public ImageView createIcon(String location) {
 		Image image = new Image(getClass().getResourceAsStream(location));
 		ImageView scaledImage = new ImageView(image);
 		scaledImage.setFitHeight(fitH);
-		scaledImage.setFitWidth(fitW);		
+		scaledImage.setFitWidth(fitW);
 		return scaledImage;
+	}
+
+	/**
+	 * Opens an image from file to be used
+	 * @return the open image if one is open, null if one is not
+	 */
+	public Image openImage() {
+
+		FileChooser fileChooser = new FileChooser();
+
+		FileChooser.ExtensionFilter imageExtensions = new FileChooser.ExtensionFilter("all images", "*.jpg", "*.png",
+				"*.JPG", "*.PNG", "*.jpeg", ".JPEG");
+
+		FileChooser.ExtensionFilter extFilterjpg = new FileChooser.ExtensionFilter("jpg files (*.jpg)", "*.jpg",
+				"*.JPG", "*.jpeg", ".JPEG");
+
+		FileChooser.ExtensionFilter extFilterpng = new FileChooser.ExtensionFilter("png files (*.png)", "*.png",
+				"*.PNG");
+		fileChooser.getExtensionFilters().addAll(imageExtensions, extFilterjpg, extFilterpng);
+		// Show open file dialog
+		File file = fileChooser.showOpenDialog(null);
+
+		if (file == null) {
+			// Do Nothing
+		} else {
+
+			try {
+				BufferedImage bufferedImage = ImageIO.read(file);
+				Image image = SwingFXUtils.toFXImage(bufferedImage, null);
+				return image;
+			} catch (IOException ex) {
+				Logger.getLogger(JFXPaint.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+
+		return null;
 	}
 }
