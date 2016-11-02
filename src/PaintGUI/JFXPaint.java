@@ -189,26 +189,26 @@ public class JFXPaint extends Application {
 					case 0:
 						// lineSize.getSelectionModel().select(0);
 						jc.tool = 0;
-						textBox.setVisible(false);
+						textReset(textBox);
 						break;
 					case 1:
 						// lineSize.getSelectionModel().select(0);
 						jc.tool = 1;
-						textBox.setVisible(false);
+						textReset(textBox);
 						break;
 					case 2:
 						// lineSize.getSelectionModel().select(0);
 						jc.tool = 2;
-						textBox.setVisible(false);
+						textReset(textBox);
 						break;
 					case 3:
 						jc.tool = 3;
 						// lineSize.getSelectionModel().select(2);
-						textBox.setVisible(false);
+						textReset(textBox);
 						break;
 					case 4:
 						jc.tool = 4;
-						textBox.setVisible(false);
+						textReset(textBox);
 						break;
 					case 5:
 						jc.tool = 5;
@@ -345,46 +345,50 @@ public class JFXPaint extends Application {
 
 		Label toolLabel = new Label("Tools:");
 
-		Image brushImage = new Image(getClass().getResourceAsStream("/icons/brush.png"));
+		/**Image brushImage = new Image(getClass().getResourceAsStream("/icons/brush.png"));
 		ImageView scaledBrush = new ImageView(brushImage);
 		scaledBrush.setFitHeight(fitH);
-		scaledBrush.setFitWidth(fitW);
+		scaledBrush.setFitWidth(fitW);**/
 
-		ToggleButton drawLineBtn = new ToggleButton(null, scaledBrush);
+		//ToggleButton drawLineBtn = new ToggleButton(null, scaledBrush);
+		ToggleButton drawLineBtn = new ToggleButton(null, createIcon("/icons/brush.png"));
 		drawLineBtn.setPadding(Insets.EMPTY);
 		drawLineBtn.setToggleGroup(tools);
 		drawLineBtn.setUserData(0);
 		drawLineBtn.setSelected(true);
 		//drawLineBtn.setStyle("-fx-base: lightgreen;");
 
-		Image rectImage = new Image(getClass().getResourceAsStream("/icons/square.png"));
+		/**Image rectImage = new Image(getClass().getResourceAsStream("/icons/square.png"));
 		ImageView scaledRect = new ImageView(rectImage);
 		scaledRect.setFitHeight(fitH);
-		scaledRect.setFitWidth(fitW);
+		scaledRect.setFitWidth(fitW);**/
 
-		ToggleButton rectButton = new ToggleButton(null, scaledRect);
+		//ToggleButton rectButton = new ToggleButton(null, scaledRect);
+		ToggleButton rectButton = new ToggleButton(null, createIcon("/icons/square.png"));
 		rectButton.setPadding(Insets.EMPTY);
 		rectButton.setToggleGroup(tools);
 		rectButton.setUserData(1);
 		//rectButton.setStyle("-fx-base: lightblue;");
 
-		Image circleImage = new Image(getClass().getResourceAsStream("/icons/circle.png"));
+		/**Image circleImage = new Image(getClass().getResourceAsStream("/icons/circle.png"));
 		ImageView scaledCircle = new ImageView(circleImage);
 		scaledCircle.setFitHeight(fitH);
-		scaledCircle.setFitWidth(fitW);
+		scaledCircle.setFitWidth(fitW);**/
 
-		ToggleButton circleBtn = new ToggleButton(null, scaledCircle);
+		//ToggleButton circleBtn = new ToggleButton(null, scaledCircle);
+		ToggleButton circleBtn = new ToggleButton(null, createIcon("/icons/circle.png"));
 		circleBtn.setPadding(Insets.EMPTY);
 		circleBtn.setToggleGroup(tools);
 		circleBtn.setUserData(2);
 		//circleBtn.setStyle("-fx-base: plum;");
 
-		Image eraserImage = new Image(getClass().getResourceAsStream("/icons/eraser.png"));
+		/**Image eraserImage = new Image(getClass().getResourceAsStream("/icons/eraser.png"));
 		ImageView scaledEraser = new ImageView(eraserImage);
 		scaledEraser.setFitHeight(fitH);
-		scaledEraser.setFitWidth(fitW);
+		scaledEraser.setFitWidth(fitW);**/
 
-		ToggleButton eraserBtn = new ToggleButton(null, scaledEraser);
+		//ToggleButton eraserBtn = new ToggleButton(null, scaledEraser);
+		ToggleButton eraserBtn = new ToggleButton(null, createIcon("/icons/eraser.png"));
 		eraserBtn.setPadding(Insets.EMPTY);
 		eraserBtn.setToggleGroup(tools);
 		eraserBtn.setUserData(3);
@@ -395,7 +399,8 @@ public class JFXPaint extends Application {
 		scaledPenguin.setFitHeight(fitH);
 		scaledPenguin.setFitWidth(fitW);
 		
-		ToggleButton textBtn = new ToggleButton(null, scaledPenguin);
+		//ToggleButton textBtn = new ToggleButton(null, scaledPenguin);
+		ToggleButton textBtn = new ToggleButton(null, createIcon("/icons/penguin_2.png"));
 		textBtn.setPadding(Insets.EMPTY);
 		textBtn.setToggleGroup(tools);
 		textBtn.setUserData(5);
@@ -432,5 +437,26 @@ public class JFXPaint extends Application {
 		stage.setScene(scene);
 		stage.show();
 	}
+	
+	/**
+	 * Clears the text in the field and makes it invisible
+	 * @param textBox: the textbox to be reset
+	 */
+	public void textReset(TextField textBox){
+		textBox.clear();
+		textBox.setVisible(false);		
+	}
 
+	/**
+	 * Creates a scaled image for use as an icon
+	 * @param location: the file location of the image to be scaled
+	 * @return a scaled image for use as an icon
+	 */
+	public ImageView createIcon(String location){		
+		Image image = new Image(getClass().getResourceAsStream(location));
+		ImageView scaledImage = new ImageView(image);
+		scaledImage.setFitHeight(fitH);
+		scaledImage.setFitWidth(fitW);		
+		return scaledImage;
+	}
 }
