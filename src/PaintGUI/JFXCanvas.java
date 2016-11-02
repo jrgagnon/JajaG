@@ -36,9 +36,14 @@ public class JFXCanvas {
 
 	public int tool = 0;
 	public int lineSize = 0;
+<<<<<<< HEAD
 	
 	Stack stack = new Stack(); // contains images
 	
+=======
+	String textString = "";
+
+>>>>>>> refs/remotes/origin/text
 	public void draw(GraphicsContext gc, Canvas canvas) {
 
 		// Add Mouse Click Event
@@ -136,6 +141,12 @@ public class JFXCanvas {
 			eraser = true;
 			erase(gc, canvas);
 			break;
+		case 4:
+			
+			break;
+		case 5:
+			textDraw(gc);
+			break;		
 		default:
 			System.out.println("Default");
 			break;
@@ -292,6 +303,13 @@ public class JFXCanvas {
 		}
 
 	}
+	
+	public void textDraw(GraphicsContext gc){
+		if(pressed == 1 && textString != null){
+			gc.strokeText(textString, oldX, oldY);
+		}
+		
+	}
 
 	public void saveColor(GraphicsContext gc) {
 		p = gc.getStroke();
@@ -304,6 +322,10 @@ public class JFXCanvas {
 			imageDraw(gc, canvas, im);
 		}
 			
+	}
+
+	public void setText(String text) {
+		textString = text;		
 	}
 
 }
