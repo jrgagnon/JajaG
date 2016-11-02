@@ -1,17 +1,5 @@
 package PaintGUI;
 
-import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.awt.image.RenderedImage;
-import java.awt.image.WritableRaster;
-import java.io.IOException;
-import java.util.Hashtable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.imageio.ImageIO;
-
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -36,14 +24,10 @@ public class JFXCanvas {
 
 	public int tool = 0;
 	public int lineSize = 0;
-<<<<<<< HEAD
+	String textString = "";
 	
 	Stack stack = new Stack(); // contains images
 	
-=======
-	String textString = "";
-
->>>>>>> refs/remotes/origin/text
 	public void draw(GraphicsContext gc, Canvas canvas) {
 
 		// Add Mouse Click Event
@@ -146,7 +130,7 @@ public class JFXCanvas {
 			break;
 		case 5:
 			textDraw(gc);
-			break;		
+			break;
 		default:
 			System.out.println("Default");
 			break;
@@ -254,7 +238,6 @@ public class JFXCanvas {
 			gc.lineTo(curX, curY);
 			gc.stroke();
 		} else if (pressed == 0 && eraser) {
-			//gc.setStroke(Color.BLACK);
 			gc.setStroke(p);
 		}
 
@@ -303,14 +286,14 @@ public class JFXCanvas {
 		}
 
 	}
-	
+
 	public void textDraw(GraphicsContext gc){
 		if(pressed == 1 && textString != null){
 			gc.strokeText(textString, oldX, oldY);
 		}
 		
-	}
-
+	}	
+	
 	public void saveColor(GraphicsContext gc) {
 		p = gc.getStroke();
 	}
@@ -323,7 +306,7 @@ public class JFXCanvas {
 		}
 			
 	}
-
+	
 	public void setText(String text) {
 		textString = text;		
 	}
