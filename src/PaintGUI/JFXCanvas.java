@@ -11,11 +11,14 @@ import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
+import com.sun.javafx.geom.Point2D;
+
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -136,6 +139,9 @@ public class JFXCanvas {
 			eraser = true;
 			erase(gc, canvas);
 			break;
+		case 4:
+			fill(gc, canvas);
+			break;
 		default:
 			System.out.println("Default");
 			break;
@@ -249,7 +255,25 @@ public class JFXCanvas {
 
 	}
 	
-	public void fill(GraphicsContext gc){
+	public void fill(GraphicsContext gc, Canvas canvas){
+		
+		if(pressed == 1){
+			float xValue = (float) oldX;
+			float yValue = (float) oldY;
+			Point2D start = new Point2D(xValue, yValue);			
+			WritableImage writableImage = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
+			canvas.snapshot(null, writableImage);		
+			Image image = writableImage;
+			PixelReader pr = image.getPixelReader();
+			Paint newColor = p;
+			Paint oldColor = pr.getColor((int)oldX, (int)oldY);
+			changeToolSize(gc, 1.00);
+			gc.strokeLine(start.x, start.y, start.x, start.y);
+		}
+		
+	}
+	
+	public void fillRecursion(GraphicsContext gc, Point2D start, Paint color, PixelReader pr){
 		
 		
 		
