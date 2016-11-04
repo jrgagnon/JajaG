@@ -43,6 +43,14 @@ public class JFXCanvas {
 				pressed = 1;
 				tool(gc, canvas);
 
+				/* Blank canvas needs added to undo stack */
+				if(stack.size == 0){
+					WritableImage writableImage = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
+					canvas.snapshot(null, writableImage);
+
+					Image image = writableImage;
+					stack.push(image);					
+				}
 			}
 		});
 
@@ -71,8 +79,6 @@ public class JFXCanvas {
 				tool(gc, canvas);
 
 				/* Add buffered image to stack for undo functionality */
-				System.out.println("Mouse released"); //TODO
-
 				WritableImage writableImage = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
 				canvas.snapshot(null, writableImage);
 
@@ -111,31 +117,31 @@ public class JFXCanvas {
 	// determines what tool to execute
 	public void tool(GraphicsContext gc, Canvas canvas) {
 		switch (tool) {
-			case 0:
-				drawLine(gc, canvas);
-				break;
-			case 1:
-				drawRect(gc, canvas);
-				break;
-			case 2:
-				drawCircle(gc, canvas);
-				break;
-			case 3:
-				if(!eraser){
-					saveColor(gc);
-				}
-				eraser = true;
-				erase(gc, canvas);
-				break;
-			case 4:
+		case 0:
+			drawLine(gc, canvas);
+			break;
+		case 1:
+			drawRect(gc, canvas);
+			break;
+		case 2:
+			drawCircle(gc, canvas);
+			break;
+		case 3:
+			if(!eraser){
+				saveColor(gc);
+			}
+			eraser = true;
+			erase(gc, canvas);
+			break;
+		case 4:
 
-				break;
-			case 5:
-				textDraw(gc);
-				break;
-			default:
-				System.out.println("Default");
-				break;
+			break;
+		case 5:
+			textDraw(gc);
+			break;
+		default:
+			System.out.println("Default");
+			break;
 
 		}
 	}
@@ -235,7 +241,7 @@ public class JFXCanvas {
 		if (gc.getLineWidth() < 5)
 			canvas.setCursor(Cursor.CROSSHAIR);
 
-			// If the stroke size >= 5, use custom eraser image
+		// If the stroke size >= 5, use custom eraser image
 		else if (gc.getLineWidth() >= 5) {
 			Image eraser = new Image("/PaintGUI/CustomCursors/EraserCursor5.png",
 					gc.getLineWidth(), gc.getLineWidth(), true, false);
@@ -263,21 +269,21 @@ public class JFXCanvas {
 	public void changeLineSize(GraphicsContext gc) {
 
 		switch (lineSize) {
-			case 0:
-				gc.setLineWidth(1.0);
-				break;
-			case 1:
-				gc.setLineWidth(25.0);
-				break;
-			case 2:
-				gc.setLineWidth(50.0);
-				break;
-			case 3:
-				gc.setLineWidth(100.0);
-				break;
-			default:
-				System.out.println("Default");
-				break;
+		case 0:
+			gc.setLineWidth(1.0);
+			break;
+		case 1:
+			gc.setLineWidth(25.0);
+			break;
+		case 2:
+			gc.setLineWidth(50.0);
+			break;
+		case 3:
+			gc.setLineWidth(100.0);
+			break;
+		default:
+			System.out.println("Default");
+			break;
 
 		}
 
@@ -316,7 +322,6 @@ public class JFXCanvas {
 	}
 
 	public void undo(GraphicsContext gc, Canvas canvas){
-		System.out.println("Undo");
 		Image im = stack.pop();
 		if(im != null){
 			imageDraw(gc, canvas, im);
