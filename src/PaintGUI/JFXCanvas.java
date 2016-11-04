@@ -1,6 +1,8 @@
 package PaintGUI;
 
 import javafx.event.EventHandler;
+import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -25,9 +27,9 @@ public class JFXCanvas {
 	public int tool = 0;
 	public int lineSize = 0;
 	String textString = "";
-	
+
 	Stack stack = new Stack(); // contains images
-	
+
 	public void draw(GraphicsContext gc, Canvas canvas) {
 
 		// Add Mouse Click Event
@@ -70,10 +72,10 @@ public class JFXCanvas {
 
 				/* Add buffered image to stack for undo functionality */
 				System.out.println("Mouse released"); //TODO
-				
+
 				WritableImage writableImage = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
 				canvas.snapshot(null, writableImage);
-			
+
 				Image image = writableImage; // WritableImage extends Image, but probly not sufficient
 				stack.push(image);
 			}
@@ -109,37 +111,38 @@ public class JFXCanvas {
 	// determines what tool to execute
 	public void tool(GraphicsContext gc, Canvas canvas) {
 		switch (tool) {
-		case 0:
-			drawLine(gc, canvas);
-			break;
-		case 1:
-			drawRect(gc, canvas);
-			break;
-		case 2:
-			drawCircle(gc, canvas);
-			break;
-		case 3:
-			if(!eraser){
-				saveColor(gc);
-			}
-			eraser = true;
-			erase(gc, canvas);
-			break;
-		case 4:
-			
-			break;
-		case 5:
-			textDraw(gc);
-			break;
-		default:
-			System.out.println("Default");
-			break;
+			case 0:
+				drawLine(gc, canvas);
+				break;
+			case 1:
+				drawRect(gc, canvas);
+				break;
+			case 2:
+				drawCircle(gc, canvas);
+				break;
+			case 3:
+				if(!eraser){
+					saveColor(gc);
+				}
+				eraser = true;
+				erase(gc, canvas);
+				break;
+			case 4:
+
+				break;
+			case 5:
+				textDraw(gc);
+				break;
+			default:
+				System.out.println("Default");
+				break;
 
 		}
 	}
 
 	// Line Tool Called when tool == 0
 	public void drawLine(GraphicsContext gc, Canvas canvas) {
+		canvas.setCursor(Cursor.CROSSHAIR); // Default cursor
 
 		// Start the path from the new mouse location on click
 		if (pressed == 1) {
@@ -157,6 +160,8 @@ public class JFXCanvas {
 
 	// Rectangle Tool Called when tool == 1
 	public void drawRect(GraphicsContext gc, Canvas canvas) {
+		canvas.setCursor(Cursor.CROSSHAIR); // Default cursor
+
 		if (pressed == 0) {
 			// find lowest x and y, then gain shape size
 			double length;
@@ -189,6 +194,7 @@ public class JFXCanvas {
 
 	// Circle Tool Called when tool == 1
 	public void drawCircle(GraphicsContext gc, Canvas canvas) {
+		canvas.setCursor(Cursor.CROSSHAIR); // Default cursor
 
 		if (pressed == 0) {
 			// find lowest x and y, then gain shape size
@@ -225,12 +231,23 @@ public class JFXCanvas {
 
 		gc.setStroke(Color.WHITE);
 
+		// Adjust cursor based on line width
+		if (gc.getLineWidth() < 5)
+			canvas.setCursor(Cursor.CROSSHAIR);
+
+			// If the stroke size >= 5, use custom eraser image
+		else if (gc.getLineWidth() >= 5) {
+			Image eraser = new Image("/PaintGUI/CustomCursors/EraserCursor5.png",
+					gc.getLineWidth(), gc.getLineWidth(), true, false);
+			canvas.setCursor(new ImageCursor(eraser) );
+		}
+
 		// Start the path from the new mouse location on click
 		if (pressed == 1) {
 			gc.beginPath();
 			gc.moveTo(oldX, oldY);
 			gc.stroke();
-			
+
 
 
 			// Erase a path if the mouse is dragged
@@ -246,21 +263,21 @@ public class JFXCanvas {
 	public void changeLineSize(GraphicsContext gc) {
 
 		switch (lineSize) {
-		case 0:
-			gc.setLineWidth(1.0);
-			break;
-		case 1:
-			gc.setLineWidth(25.0);
-			break;
-		case 2:
-			gc.setLineWidth(50.0);
-			break;
-		case 3:
-			gc.setLineWidth(100.0);
-			break;
-		default:
-			System.out.println("Default");
-			break;
+			case 0:
+				gc.setLineWidth(1.0);
+				break;
+			case 1:
+				gc.setLineWidth(25.0);
+				break;
+			case 2:
+				gc.setLineWidth(50.0);
+				break;
+			case 3:
+				gc.setLineWidth(100.0);
+				break;
+			default:
+				System.out.println("Default");
+				break;
 
 		}
 
@@ -291,24 +308,24 @@ public class JFXCanvas {
 		if(pressed == 1 && textString != null){
 			gc.strokeText(textString, oldX, oldY);
 		}
-		
-	}	
-	
+
+	}
+
 	public void saveColor(GraphicsContext gc) {
 		p = gc.getStroke();
 	}
-	
+
 	public void undo(GraphicsContext gc, Canvas canvas){
 		System.out.println("Undo");
 		Image im = stack.pop();
 		if(im != null){
 			imageDraw(gc, canvas, im);
 		}
-			
+
 	}
-	
+
 	public void setText(String text) {
-		textString = text;		
+		textString = text;
 	}
 
 }
