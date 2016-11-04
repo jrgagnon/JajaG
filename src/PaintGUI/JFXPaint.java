@@ -331,7 +331,7 @@ public class JFXPaint extends Application {
 		eraserBtn.setToggleGroup(tools);
 		eraserBtn.setUserData(3);
 		
-		ToggleButton textBtn = new ToggleButton(null, createIcon("/icons/penguin_2.png"));
+		ToggleButton textBtn = new ToggleButton(null, createIcon("/icons/text.png"));
 		textBtn.setPadding(Insets.EMPTY);
 		textBtn.setToggleGroup(tools);
 		textBtn.setUserData(5);
