@@ -58,6 +58,8 @@ public class JFXPaint extends Application {
 	public double fitH = 40.0;
 
 	public double toolSize = 1.00;
+	
+	public File file = null;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -218,10 +220,60 @@ public class JFXPaint extends Application {
 		// just , (menuoption) in the addAll to add
 		menuBar.getMenus().addAll(menuFile, menuEdit, menuInsert);
 
-		// Save Option
+		// Saves the canvas over the previously selected file location
+		// If non was selected has you choose a location and name
 		MenuItem save = new MenuItem("Save");
 		save.setAccelerator(KeyCombination.keyCombination("Ctrl+S"));
+		
 		save.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent t) {
+				
+				if(file == null){
+					file = getSaveLocation(stage);
+				}
+
+				if (file != null) {
+					try {
+						WritableImage writableImage = new WritableImage((int) cw, (int) ch);
+						canvas.snapshot(null, writableImage);
+						RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
+						ImageIO.write(renderedImage, "png", file);
+					} catch (IOException ex) {
+						Logger.getLogger(JFXPaint.class.getName()).log(Level.SEVERE, null, ex);
+					}
+				}
+			}
+
+		});
+		
+		// Saves the canvas as a new file
+		// Opens the dialog for you to choose location and name
+		MenuItem saveAs = new MenuItem("Save As");
+				
+		saveAs.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent t) {
+				
+				file = getSaveLocation(stage);
+				
+				if (file != null) {
+					try {
+						WritableImage writableImage = new WritableImage((int) cw, (int) ch);
+						canvas.snapshot(null, writableImage);
+						RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
+						ImageIO.write(renderedImage, "png", file);
+					} catch (IOException ex) {
+						Logger.getLogger(JFXPaint.class.getName()).log(Level.SEVERE, null, ex);
+					}
+				}
+			}
+
+		});
+		//Old Save
+		/**save.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent t) {
@@ -253,7 +305,9 @@ public class JFXPaint extends Application {
 				}
 			}
 
-		});
+		});**/
+		
+		
 
 		// Open Option
 		MenuItem open = new MenuItem("Open");
@@ -310,8 +364,8 @@ public class JFXPaint extends Application {
 			}
 		});
 
-		// Add menu options to file portion of the menu bar
-		menuFile.getItems().addAll(clear, open, save);
+		// Add menu options to the drop downs of the menu bar
+		menuFile.getItems().addAll(clear, open, save, saveAs);
 		menuEdit.getItems().addAll(undo);
 		menuInsert.getItems().addAll(image);
 		
@@ -446,5 +500,19 @@ public class JFXPaint extends Application {
 		}
 
 		return null;
+	}
+	
+	public File getSaveLocation(Stage stage){
+		FileChooser fileChooser = new FileChooser();
+
+		// Set extension filter
+		FileChooser.ExtensionFilter extFilterjpg = new FileChooser.ExtensionFilter("jpg files (*.jpg)", "*.jpg",
+				"*.JPG", "*.jpeg", ".JPEG");
+
+		FileChooser.ExtensionFilter extFilterpng = new FileChooser.ExtensionFilter("png files (*.png)", "*.png",
+				"*.PNG");
+		fileChooser.getExtensionFilters().addAll(extFilterjpg, extFilterpng);
+		
+		return fileChooser.showSaveDialog(stage);
 	}
 }
