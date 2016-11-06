@@ -27,6 +27,7 @@ public class JFXCanvas {
 	public int tool = 0;
 	public int lineSize = 0;
 	String textString = "";
+	Image image = null;
 
 	Stack stack = new Stack(); // contains images
 
@@ -44,12 +45,12 @@ public class JFXCanvas {
 				tool(gc, canvas);
 
 				/* Blank canvas needs added to undo stack */
-				if(stack.size == 0){
+				if (stack.size == 0) {
 					WritableImage writableImage = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
 					canvas.snapshot(null, writableImage);
 
 					Image image = writableImage;
-					stack.push(image);					
+					stack.push(image);
 				}
 			}
 		});
@@ -82,7 +83,8 @@ public class JFXCanvas {
 				WritableImage writableImage = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
 				canvas.snapshot(null, writableImage);
 
-				Image image = writableImage; // WritableImage extends Image, but probly not sufficient
+				Image image = writableImage; // WritableImage extends Image, but
+												// probly not sufficient
 				stack.push(image);
 			}
 		});
@@ -127,7 +129,7 @@ public class JFXCanvas {
 			drawCircle(gc, canvas);
 			break;
 		case 3:
-			if(!eraser){
+			if (!eraser) {
 				saveColor(gc);
 			}
 			eraser = true;
@@ -138,6 +140,9 @@ public class JFXCanvas {
 			break;
 		case 5:
 			textDraw(gc);
+			break;
+		case 6:
+			imageInsert(gc, canvas);
 			break;
 		default:
 			System.out.println("Default");
@@ -243,9 +248,9 @@ public class JFXCanvas {
 
 		// If the stroke size >= 5, use custom eraser image
 		else if (gc.getLineWidth() >= 5) {
-			Image eraser = new Image("/PaintGUI/CustomCursors/EraserCursor5.png",
-					gc.getLineWidth(), gc.getLineWidth(), true, false);
-			canvas.setCursor(new ImageCursor(eraser) );
+			Image eraser = new Image("/PaintGUI/CustomCursors/EraserCursor5.png", gc.getLineWidth(), gc.getLineWidth(),
+					true, false);
+			canvas.setCursor(new ImageCursor(eraser));
 		}
 
 		// Start the path from the new mouse location on click
@@ -253,8 +258,6 @@ public class JFXCanvas {
 			gc.beginPath();
 			gc.moveTo(oldX, oldY);
 			gc.stroke();
-
-
 
 			// Erase a path if the mouse is dragged
 		} else if (pressed == 2) {
@@ -310,8 +313,44 @@ public class JFXCanvas {
 
 	}
 
-	public void textDraw(GraphicsContext gc){
-		if(pressed == 1 && textString != null){
+	public void imageInsert(GraphicsContext gc, Canvas canvas) {
+		if (pressed == 0) {
+			// find lowest x and y, then gain shape size
+			double length;
+			double width;
+			double tempX;
+			double tempY;
+
+			// Determine Length
+			if (oldX < endX) {
+				tempX = oldX;
+				length = endX - oldX;
+			} else {
+				tempX = endX;
+				length = oldX - endX;
+			}
+
+			// Determine Width
+			if (oldY < endY) {
+				tempY = oldY;
+				width = endY - oldY;
+			} else {
+				tempY = endY;
+				width = oldY - endY;
+			}
+
+			gc.drawImage(image, tempX, tempY, length, width);
+			tool = 0;
+		}
+
+	}
+
+	public void setImage(Image i) {
+		image = i;
+	}
+
+	public void textDraw(GraphicsContext gc) {
+		if (pressed == 1 && textString != null) {
 			gc.strokeText(textString, oldX, oldY);
 		}
 
@@ -321,9 +360,9 @@ public class JFXCanvas {
 		p = gc.getStroke();
 	}
 
-	public void undo(GraphicsContext gc, Canvas canvas){
+	public void undo(GraphicsContext gc, Canvas canvas) {
 		Image im = stack.pop();
-		if(im != null){
+		if (im != null) {
 			imageDraw(gc, canvas, im);
 		}
 

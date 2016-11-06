@@ -211,10 +211,11 @@ public class JFXPaint extends Application {
 		// --- File Menu Option
 		Menu menuFile = new Menu("File");
 		Menu menuEdit = new Menu("Edit");
+		Menu menuInsert = new Menu("Insert");
 
 		// Adds the menu options to the menu bar
 		// just , (menuoption) in the addAll to add
-		menuBar.getMenus().addAll(menuFile, menuEdit);
+		menuBar.getMenus().addAll(menuFile, menuEdit, menuInsert);
 
 		// Save Option
 		MenuItem save = new MenuItem("Save");
@@ -289,11 +290,26 @@ public class JFXPaint extends Application {
 				jc.undo(gc, canvas);
 			}
 		});
+		
+		MenuItem image = new MenuItem("image");
+		image.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent t) {
+				Image image = openImage();
+				if (image == null) {
+					// Do Nothing
+				} else {
+					jc.tool = 6;
+					jc.setImage(image);
+				}
+			}
+		});
 
 		// Add menu options to file portion of the menu bar
 		menuFile.getItems().addAll(clear, open, save);
 		menuEdit.getItems().addAll(undo);
-
+		menuInsert.getItems().addAll(image);
 		
 		// Declare the color picker
 		// final ColorPicker colorPicker = new ColorPicker();
