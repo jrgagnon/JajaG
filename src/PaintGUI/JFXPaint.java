@@ -220,6 +220,7 @@ public class JFXPaint extends Application {
 
 		// Save Option
 		MenuItem save = new MenuItem("Save");
+		save.setAccelerator(KeyCombination.keyCombination("Ctrl+S"));
 		save.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -294,6 +295,7 @@ public class JFXPaint extends Application {
 		});
 		
 		MenuItem image = new MenuItem("image");
+		image.setAccelerator(KeyCombination.keyCombination("Ctrl+I"));
 		image.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
