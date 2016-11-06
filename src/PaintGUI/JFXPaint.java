@@ -33,6 +33,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -283,6 +284,7 @@ public class JFXPaint extends Application {
 		
 		// Undo option TODO
 		MenuItem undo = new MenuItem("Undo");
+		undo.setAccelerator(KeyCombination.keyCombination("Ctrl+Z"));
 		undo.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
