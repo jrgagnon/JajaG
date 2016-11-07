@@ -29,7 +29,8 @@ public class JFXCanvas {
 	String textString = "";
 	Image image = null;
 
-	Stack stack = new Stack(); // contains images
+	Stack undoStack = new Stack(); // contains images
+	Stack redoStack = new Stack();
 
 	public void draw(GraphicsContext gc, Canvas canvas) {
 
@@ -45,12 +46,12 @@ public class JFXCanvas {
 				tool(gc, canvas);
 
 				/* Blank canvas needs added to undo stack */
-				if (stack.size == 0) {
+				if (undoStack.size == 0) {
 					WritableImage writableImage = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
 					canvas.snapshot(null, writableImage);
 
 					Image image = writableImage;
-					stack.push(image);
+					undoStack.push(image);
 				}
 			}
 		});
@@ -85,7 +86,7 @@ public class JFXCanvas {
 
 				Image image = writableImage; // WritableImage extends Image, but
 												// probly not sufficient
-				stack.push(image);
+				undoStack.push(image);
 			}
 		});
 
@@ -361,13 +362,22 @@ public class JFXCanvas {
 	}
 
 	public void undo(GraphicsContext gc, Canvas canvas) {
-		Image im = stack.pop();
+		Image im = undoStack.pop();
 		if (im != null) {
+			redoStack.push(im);
 			imageDraw(gc, canvas, im);
 		}
 
 	}
 
+	public void redo(GraphicsContext gc, Canvas canvas) {
+		Image im = redoStack.pop();
+		if (im != null) {
+			imageDraw(gc, canvas, im);
+		}
+
+	}
+	
 	public void setText(String text) {
 		textString = text;
 	}
