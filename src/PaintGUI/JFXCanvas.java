@@ -383,8 +383,8 @@ public class JFXCanvas {
 
 	public void changeFont(GraphicsContext gc) {
 		FontSelect fc = new FontSelect();
-		font = fc.select();
-		gc.setFont(Font.font(font, fontSize));
+		String fontFormated = fc.select(font, bold, italic);
+		gc.setFont(Font.font(fontFormated));
 		
 	}
 
