@@ -337,7 +337,7 @@ public class JFXPaint extends Application {
 			}
 		});
 		
-		// Undo option TODO
+		// Undo option 
 		MenuItem undo = new MenuItem("Undo");
 		undo.setAccelerator(KeyCombination.keyCombination("Ctrl+Z"));
 		undo.setOnAction(new EventHandler<ActionEvent>() {
@@ -345,6 +345,17 @@ public class JFXPaint extends Application {
 			@Override
 			public void handle(ActionEvent t) {
 				jc.undo(gc, canvas);
+			}
+		});
+		
+		// Redo option
+		MenuItem redo = new MenuItem("Redo");
+		redo.setAccelerator(KeyCombination.keyCombination("Ctrl+Y"));
+		redo.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent t) {
+				jc.redo(gc, canvas);
 			}
 		});
 		
@@ -366,8 +377,10 @@ public class JFXPaint extends Application {
 
 		// Add menu options to the drop downs of the menu bar
 		menuFile.getItems().addAll(clear, open, save, saveAs);
-		menuEdit.getItems().addAll(undo);
+		menuEdit.getItems().addAll(undo, redo);
 		menuInsert.getItems().addAll(image);
+		
+		
 		
 		// Declare the color picker
 		// final ColorPicker colorPicker = new ColorPicker();
