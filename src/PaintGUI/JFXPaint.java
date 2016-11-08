@@ -155,6 +155,7 @@ public class JFXPaint extends Application {
 				jc.changeFont(gc);
 			}
 		});
+		cb.getSelectionModel().select(0);
 		cb.setVisible(false);
 
 		Button bold = new Button("B");
@@ -190,6 +191,49 @@ public class JFXPaint extends Application {
 			}
 		});
 		italic.setVisible(false);
+		
+		NumberTextField fontSizeTxt = new NumberTextField();
+		fontSizeTxt.setPrefSize(50, 30);
+		fontSizeTxt.setAlignment(Pos.BASELINE_RIGHT);
+		fontSizeTxt.textProperty().addListener((observable, oldValue, newValue) -> {
+			try {
+				double fontSizeHere = Double.parseDouble(newValue);
+				jc.fontSize = fontSizeHere;
+				jc.changeFont(gc);
+			} catch (Exception e) {
+
+			}
+		});
+		fontSizeTxt.setText("12.0");
+		fontSizeTxt.setVisible(false);
+
+		Button addFont = new Button("+");
+		addFont.setPrefSize(30, 30);
+		addFont.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent t) {
+				jc.fontSize++;
+				fontSizeTxt.setText(String.valueOf(jc.fontSize));
+				jc.changeFont(gc);
+			}
+		});
+		addFont.setVisible(false);
+
+		Button subFont = new Button("-");
+		subFont.setPrefSize(30, 30);
+		subFont.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent t) {
+				if (jc.fontSize > 1) {
+					jc.fontSize--;
+					fontSizeTxt.setText(String.valueOf(jc.fontSize));
+					jc.changeFont(gc);
+				}
+			}
+		});
+		subFont.setVisible(false);
 
 		// Changes the size of the canvas when the window resizes
 		scene.widthProperty().addListener(new ChangeListener<Number>() {
@@ -226,23 +270,23 @@ public class JFXPaint extends Application {
 					switch (tool) {
 					case 0:
 						jc.tool = 0;
-						textReset(textBox, cb, bold, italic);
+						textReset(textBox, cb, bold, italic, subFont, addFont, fontSizeTxt);
 						break;
 					case 1:
 						jc.tool = 1;
-						textReset(textBox, cb, bold, italic);
+						textReset(textBox, cb, bold, italic, subFont, addFont, fontSizeTxt);
 						break;
 					case 2:
 						jc.tool = 2;
-						textReset(textBox, cb, bold, italic);
+						textReset(textBox, cb, bold, italic, subFont, addFont, fontSizeTxt);
 						break;
 					case 3:
 						jc.tool = 3;
-						textReset(textBox, cb, bold, italic);
+						textReset(textBox, cb, bold, italic, subFont, addFont, fontSizeTxt);
 						break;
 					case 4:
 						jc.tool = 4;
-						textReset(textBox, cb, bold, italic);
+						textReset(textBox, cb, bold, italic, subFont, addFont, fontSizeTxt);
 						break;
 					case 5:
 						jc.tool = 5;
@@ -250,6 +294,9 @@ public class JFXPaint extends Application {
 						cb.setVisible(true);
 						bold.setVisible(true);
 						italic.setVisible(true);
+						subFont.setVisible(true);
+						addFont.setVisible(true);
+						fontSizeTxt.setVisible(true);
 						break;
 					default:
 						System.out.println("Default");
@@ -482,8 +529,11 @@ public class JFXPaint extends Application {
 		tray.getChildren().add(addSize);
 		tray.getChildren().add(textBox);
 		tray.getChildren().add(cb);
-		tray.getChildren().add(bold);
-		tray.getChildren().add(italic);
+		//tray.getChildren().add(bold);
+		//tray.getChildren().add(italic);
+		tray.getChildren().add(subFont);
+		tray.getChildren().add(fontSizeTxt);
+		tray.getChildren().add(addFont);
 
 		VBox vbox = new VBox();
 
@@ -500,17 +550,20 @@ public class JFXPaint extends Application {
 	}
 
 	/**
-	 * Clears the text in the field and makes it invisible
+	 * Clears the text in the field and all the associated text items invisible
 	 * 
 	 * @param textBox:
 	 *            the textbox to be reset
 	 */
-	public void textReset(TextField textBox, ChoiceBox cb, Button bold, Button italic) {
+	public void textReset(TextField textBox, ChoiceBox cb, Button bold, Button italic, Button add, Button sub, TextField fontSize) {
 		textBox.clear();
 		textBox.setVisible(false);
 		cb.setVisible(false);
 		bold.setVisible(false);
 		italic.setVisible(false);
+		add.setVisible(false);
+		sub.setVisible(false);
+		fontSize.setVisible(false);
 	}
 
 	/**
