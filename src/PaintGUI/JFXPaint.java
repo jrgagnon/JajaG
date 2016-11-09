@@ -298,6 +298,9 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 						addFont.setVisible(true);
 						fontSizeTxt.setVisible(true);
 						break;
+					case 7:
+						jc.tool = 7;
+					break;
 					default:
 						System.out.println("Default");
 						break;
@@ -487,6 +490,11 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 		textBtn.setPadding(Insets.EMPTY);
 		textBtn.setToggleGroup(tools);
 		textBtn.setUserData(5);
+		
+		ToggleButton cropBtn = new ToggleButton(null, createIcon("/icons/penguin_2.png"));
+		cropBtn.setPadding(Insets.EMPTY);
+		cropBtn.setToggleGroup(tools);
+		cropBtn.setUserData(7);
 
 		HBox toolBox = new HBox();
 
@@ -495,6 +503,7 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 		toolBox.getChildren().add(circleBtn);
 		toolBox.getChildren().add(eraserBtn);
 		toolBox.getChildren().add(textBtn);
+		toolBox.getChildren().add(cropBtn);
 
 		HBox tray = new HBox();
 

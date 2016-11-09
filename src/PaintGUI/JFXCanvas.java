@@ -150,11 +150,49 @@ public class JFXCanvas {
 		case 6:
 			imageInsert(gc, canvas);
 			break;
+		case 7:
+			cropImage(gc, canvas);
+			break;
 		default:
 			System.out.println("Default");
 			break;
 
 		}
+	}
+
+	private void cropImage(GraphicsContext gc, Canvas canvas) {
+		if (pressed == 0) {
+			// find lowest x and y, then gain shape size
+			double height;
+			double width;
+			double tempX;
+			double tempY;
+
+			// Determine Length
+			if (oldX < endX) {
+				tempX = oldX;
+				height = endX - oldX;
+			} else {
+				tempX = endX;
+				height = oldX - endX;
+			}
+
+			// Determine Width
+			if (oldY < endY) {
+				tempY = oldY;
+				width = endY - oldY;
+			} else {
+				tempY = endY;
+				width = oldY - endY;
+			}
+
+			WritableImage image = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
+			canvas.snapshot(null, image);
+						
+			WritableImage croppedImage = new WritableImage(image.getPixelReader(), (int)tempX, (int)tempY, (int)width, (int)height);
+			gc.drawImage(croppedImage, tempX, tempY);
+		}
+
 	}
 
 	// Line Tool Called when tool == 0
@@ -382,18 +420,18 @@ public class JFXCanvas {
 		}
 
 	}
-	
+
 	public void setText(String text) {
 		textString = text;
 	}
 
 	public void setFont(String f) {
-		font = f;		
+		font = f;
 	}
 
 	public void changeFont(GraphicsContext gc) {
-		//FontSelect fc = new FontSelect();
-		//String fontFormated = fc.select(font, bold, italic);
+		// FontSelect fc = new FontSelect();
+		// String fontFormated = fc.select(font, bold, italic);
 		gc.setFont(Font.font(font, fontSize));
 	}
 
