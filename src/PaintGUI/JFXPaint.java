@@ -503,6 +503,7 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 		tray.getChildren().add(toolSizeTxt);
 		tray.getChildren().add(addSize);
 		tray.getChildren().add(textBox);
+		tray.getChildren().add(cb);
 		tray.getChildren().add(subFont);
 		tray.getChildren().add(fontSizeTxt);
 		tray.getChildren().add(addFont);
