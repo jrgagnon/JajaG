@@ -10,6 +10,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
 
 public class JFXCanvas {
 
@@ -28,6 +29,10 @@ public class JFXCanvas {
 	public int lineSize = 0;
 	String textString = "";
 	Image image = null;
+	String font = "";
+	boolean bold = false;
+	boolean italic = false;
+	double fontSize = 12.0;
 
 	Stack undoStack = new Stack(); // contains images
 	Stack redoStack = new Stack();
@@ -380,6 +385,16 @@ public class JFXCanvas {
 	
 	public void setText(String text) {
 		textString = text;
+	}
+
+	public void setFont(String f) {
+		font = f;		
+	}
+
+	public void changeFont(GraphicsContext gc) {
+		//FontSelect fc = new FontSelect();
+		//String fontFormated = fc.select(font, bold, italic);
+		gc.setFont(Font.font(font, fontSize));
 	}
 
 }

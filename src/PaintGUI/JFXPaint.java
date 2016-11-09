@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -20,6 +21,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
@@ -58,7 +60,7 @@ public class JFXPaint extends Application {
 	public double fitH = 40.0;
 
 	public double toolSize = 1.00;
-	
+
 	public File file = null;
 
 	public static void main(String[] args) {
@@ -139,6 +141,99 @@ public class JFXPaint extends Application {
 
 		textBox.setTooltip(textTooltip);
 		textBox.setVisible(false);
+		
+		final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Roman" };
+
+		ChoiceBox cb = new ChoiceBox(FXCollections.observableArrayList("Arial", "Courier", "Serif", "Times New Roman"));
+		
+		cb.setPrefSize(90, 30);
+		cb.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+
+			@Override
+			public void changed(ObservableValue ov, Number value, Number new_value) {
+				jc.setFont(fonts[new_value.intValue()]);
+				jc.changeFont(gc);
+			}
+		});
+		cb.getSelectionModel().select(0);
+		cb.setVisible(false);
+
+		Button bold = new Button("B");
+		bold.setPrefSize(30, 30);
+		bold.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				if (jc.bold) {
+					jc.bold = false;
+					jc.changeFont(gc);
+				} else {
+					jc.bold = true;
+					jc.changeFont(gc);
+				}
+
+			}
+		});
+		bold.setVisible(false);
+		
+		Button italic = new Button("I");
+		italic.setPrefSize(30, 30);
+		italic.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				if (jc.italic) {
+					jc.italic = false;
+					jc.changeFont(gc);
+				} else {
+					jc.italic = true;
+					jc.changeFont(gc);
+				}
+
+			}
+		});
+		italic.setVisible(false);
+		
+		NumberTextField fontSizeTxt = new NumberTextField();
+		fontSizeTxt.setPrefSize(50, 30);
+		fontSizeTxt.setAlignment(Pos.BASELINE_RIGHT);
+		fontSizeTxt.textProperty().addListener((observable, oldValue, newValue) -> {
+			try {
+				double fontSizeHere = Double.parseDouble(newValue);
+				jc.fontSize = fontSizeHere;
+				jc.changeFont(gc);
+			} catch (Exception e) {
+
+			}
+		});
+		fontSizeTxt.setText("12.0");
+		fontSizeTxt.setVisible(false);
+
+		Button addFont = new Button("+");
+		addFont.setPrefSize(30, 30);
+		addFont.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent t) {
+				jc.fontSize++;
+				fontSizeTxt.setText(String.valueOf(jc.fontSize));
+				jc.changeFont(gc);
+			}
+		});
+		addFont.setVisible(false);
+
+		Button subFont = new Button("-");
+		subFont.setPrefSize(30, 30);
+		subFont.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent t) {
+				if (jc.fontSize > 1) {
+					jc.fontSize--;
+					fontSizeTxt.setText(String.valueOf(jc.fontSize));
+					jc.changeFont(gc);
+				}
+			}
+		});
+		subFont.setVisible(false);
 
 		// Changes the size of the canvas when the window resizes
 		scene.widthProperty().addListener(new ChangeListener<Number>() {
@@ -175,27 +270,33 @@ public class JFXPaint extends Application {
 					switch (tool) {
 					case 0:
 						jc.tool = 0;
-						textReset(textBox);
+						textReset(textBox, cb, bold, italic, subFont, addFont, fontSizeTxt);
 						break;
 					case 1:
 						jc.tool = 1;
-						textReset(textBox);
+						textReset(textBox, cb, bold, italic, subFont, addFont, fontSizeTxt);
 						break;
 					case 2:
 						jc.tool = 2;
-						textReset(textBox);
+						textReset(textBox, cb, bold, italic, subFont, addFont, fontSizeTxt);
 						break;
 					case 3:
 						jc.tool = 3;
-						textReset(textBox);
+						textReset(textBox, cb, bold, italic, subFont, addFont, fontSizeTxt);
 						break;
 					case 4:
 						jc.tool = 4;
-						textReset(textBox);
+						textReset(textBox, cb, bold, italic, subFont, addFont, fontSizeTxt);
 						break;
 					case 5:
 						jc.tool = 5;
 						textBox.setVisible(true);
+						cb.setVisible(true);
+						bold.setVisible(true);
+						italic.setVisible(true);
+						subFont.setVisible(true);
+						addFont.setVisible(true);
+						fontSizeTxt.setVisible(true);
 						break;
 					default:
 						System.out.println("Default");
@@ -224,13 +325,13 @@ public class JFXPaint extends Application {
 		// If non was selected has you choose a location and name
 		MenuItem save = new MenuItem("Save");
 		save.setAccelerator(KeyCombination.keyCombination("Ctrl+S"));
-		
+
 		save.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent t) {
-				
-				if(file == null){
+
+				if (file == null) {
 					file = getSaveLocation(stage);
 				}
 
@@ -247,18 +348,18 @@ public class JFXPaint extends Application {
 			}
 
 		});
-		
+
 		// Saves the canvas as a new file
 		// Opens the dialog for you to choose location and name
 		MenuItem saveAs = new MenuItem("Save As");
-				
+
 		saveAs.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent t) {
-				
+
 				file = getSaveLocation(stage);
-				
+
 				if (file != null) {
 					try {
 						WritableImage writableImage = new WritableImage((int) cw, (int) ch);
@@ -272,42 +373,42 @@ public class JFXPaint extends Application {
 			}
 
 		});
-		//Old Save
-		/**save.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent t) {
-				FileChooser fileChooser = new FileChooser();
-
-				// Set extension filter
-				FileChooser.ExtensionFilter imageExtensions = new FileChooser.ExtensionFilter("all images", "*.jpg",
-						"*.png", "*.JPG", "*.PNG", "*.jpeg", ".JPEG");
-
-				FileChooser.ExtensionFilter extFilterjpg = new FileChooser.ExtensionFilter("jpg files (*.jpg)", "*.jpg",
-						"*.JPG", "*.jpeg", ".JPEG");
-
-				FileChooser.ExtensionFilter extFilterpng = new FileChooser.ExtensionFilter("png files (*.png)", "*.png",
-						"*.PNG");
-				fileChooser.getExtensionFilters().addAll(imageExtensions, extFilterjpg, extFilterpng);
-
-				// Show save file dialog
-				File file = fileChooser.showSaveDialog(stage);
-
-				if (file != null) {
-					try {
-						WritableImage writableImage = new WritableImage((int) cw, (int) ch);
-						canvas.snapshot(null, writableImage);
-						RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
-						ImageIO.write(renderedImage, "png", file);
-					} catch (IOException ex) {
-						Logger.getLogger(JFXPaint.class.getName()).log(Level.SEVERE, null, ex);
-					}
-				}
-			}
-
-		});**/
-		
-		
+		// Old Save
+		/**
+		 * save.setOnAction(new EventHandler<ActionEvent>() {
+		 * 
+		 * @Override public void handle(ActionEvent t) { FileChooser fileChooser
+		 *           = new FileChooser();
+		 * 
+		 *           // Set extension filter FileChooser.ExtensionFilter
+		 *           imageExtensions = new FileChooser.ExtensionFilter("all
+		 *           images", "*.jpg", "*.png", "*.JPG", "*.PNG", "*.jpeg",
+		 *           ".JPEG");
+		 * 
+		 *           FileChooser.ExtensionFilter extFilterjpg = new
+		 *           FileChooser.ExtensionFilter("jpg files (*.jpg)", "*.jpg",
+		 *           "*.JPG", "*.jpeg", ".JPEG");
+		 * 
+		 *           FileChooser.ExtensionFilter extFilterpng = new
+		 *           FileChooser.ExtensionFilter("png files (*.png)", "*.png",
+		 *           "*.PNG");
+		 *           fileChooser.getExtensionFilters().addAll(imageExtensions,
+		 *           extFilterjpg, extFilterpng);
+		 * 
+		 *           // Show save file dialog File file =
+		 *           fileChooser.showSaveDialog(stage);
+		 * 
+		 *           if (file != null) { try { WritableImage writableImage = new
+		 *           WritableImage((int) cw, (int) ch); canvas.snapshot(null,
+		 *           writableImage); RenderedImage renderedImage =
+		 *           SwingFXUtils.fromFXImage(writableImage, null);
+		 *           ImageIO.write(renderedImage, "png", file); } catch
+		 *           (IOException ex) {
+		 *           Logger.getLogger(JFXPaint.class.getName()).log(Level.SEVERE,
+		 *           null, ex); } } }
+		 * 
+		 *           });
+		 **/
 
 		// Open Option
 		MenuItem open = new MenuItem("Open");
@@ -336,8 +437,13 @@ public class JFXPaint extends Application {
 				jc.clear(gc, canvas);
 			}
 		});
+<<<<<<< HEAD
 		
 		// Undo option 
+=======
+
+		// Undo option TODO
+>>>>>>> refs/remotes/origin/fonts
 		MenuItem undo = new MenuItem("Undo");
 		undo.setAccelerator(KeyCombination.keyCombination("Ctrl+Z"));
 		undo.setOnAction(new EventHandler<ActionEvent>() {
@@ -358,7 +464,7 @@ public class JFXPaint extends Application {
 				jc.redo(gc, canvas);
 			}
 		});
-		
+
 		MenuItem image = new MenuItem("image");
 		image.setAccelerator(KeyCombination.keyCombination("Ctrl+I"));
 		image.setOnAction(new EventHandler<ActionEvent>() {
@@ -379,9 +485,13 @@ public class JFXPaint extends Application {
 		menuFile.getItems().addAll(clear, open, save, saveAs);
 		menuEdit.getItems().addAll(undo, redo);
 		menuInsert.getItems().addAll(image);
+<<<<<<< HEAD
 		
 		
 		
+=======
+
+>>>>>>> refs/remotes/origin/fonts
 		// Declare the color picker
 		// final ColorPicker colorPicker = new ColorPicker();
 		final ColorPicker colorPicker = new ColorPicker(Color.BLACK);
@@ -395,6 +505,8 @@ public class JFXPaint extends Application {
 			}
 		});
 
+		
+
 		Label toolLabel = new Label("Tools:");
 
 		ToggleButton drawLineBtn = new ToggleButton(null, createIcon("/icons/brush.png"));
@@ -402,22 +514,22 @@ public class JFXPaint extends Application {
 		drawLineBtn.setToggleGroup(tools);
 		drawLineBtn.setUserData(0);
 		drawLineBtn.setSelected(true);
-		
+
 		ToggleButton rectButton = new ToggleButton(null, createIcon("/icons/square.png"));
 		rectButton.setPadding(Insets.EMPTY);
 		rectButton.setToggleGroup(tools);
 		rectButton.setUserData(1);
-		
+
 		ToggleButton circleBtn = new ToggleButton(null, createIcon("/icons/circle.png"));
 		circleBtn.setPadding(Insets.EMPTY);
 		circleBtn.setToggleGroup(tools);
 		circleBtn.setUserData(2);
-		
+
 		ToggleButton eraserBtn = new ToggleButton(null, createIcon("/icons/eraser.png"));
 		eraserBtn.setPadding(Insets.EMPTY);
 		eraserBtn.setToggleGroup(tools);
 		eraserBtn.setUserData(3);
-		
+
 		ToggleButton textBtn = new ToggleButton(null, createIcon("/icons/text.png"));
 		textBtn.setPadding(Insets.EMPTY);
 		textBtn.setToggleGroup(tools);
@@ -438,6 +550,12 @@ public class JFXPaint extends Application {
 		tray.getChildren().add(toolSizeTxt);
 		tray.getChildren().add(addSize);
 		tray.getChildren().add(textBox);
+		tray.getChildren().add(cb);
+		//tray.getChildren().add(bold);
+		//tray.getChildren().add(italic);
+		tray.getChildren().add(subFont);
+		tray.getChildren().add(fontSizeTxt);
+		tray.getChildren().add(addFont);
 
 		VBox vbox = new VBox();
 
@@ -454,14 +572,20 @@ public class JFXPaint extends Application {
 	}
 
 	/**
-	 * Clears the text in the field and makes it invisible
+	 * Clears the text in the field and all the associated text items invisible
 	 * 
 	 * @param textBox:
 	 *            the textbox to be reset
 	 */
-	public void textReset(TextField textBox) {
+	public void textReset(TextField textBox, ChoiceBox cb, Button bold, Button italic, Button add, Button sub, TextField fontSize) {
 		textBox.clear();
 		textBox.setVisible(false);
+		cb.setVisible(false);
+		bold.setVisible(false);
+		italic.setVisible(false);
+		add.setVisible(false);
+		sub.setVisible(false);
+		fontSize.setVisible(false);
 	}
 
 	/**
@@ -481,6 +605,7 @@ public class JFXPaint extends Application {
 
 	/**
 	 * Opens an image from file to be used
+	 * 
 	 * @return the open image if one is open, null if one is not
 	 */
 	public Image openImage() {
@@ -514,8 +639,8 @@ public class JFXPaint extends Application {
 
 		return null;
 	}
-	
-	public File getSaveLocation(Stage stage){
+
+	public File getSaveLocation(Stage stage) {
 		FileChooser fileChooser = new FileChooser();
 
 		// Set extension filter
@@ -525,7 +650,7 @@ public class JFXPaint extends Application {
 		FileChooser.ExtensionFilter extFilterpng = new FileChooser.ExtensionFilter("png files (*.png)", "*.png",
 				"*.PNG");
 		fileChooser.getExtensionFilters().addAll(extFilterjpg, extFilterpng);
-		
+
 		return fileChooser.showSaveDialog(stage);
 	}
 }
