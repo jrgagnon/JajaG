@@ -165,32 +165,29 @@ public class JFXCanvas {
 			// find lowest x and y, then gain shape size
 			double height;
 			double width;
-			double tempX;
-			double tempY;
-
+			
 			// Determine Length
 			if (oldX < endX) {
-				tempX = oldX;
-				height = endX - oldX;
+				width = endX - oldX;
 			} else {
-				tempX = endX;
-				height = oldX - endX;
+				width = oldX - endX;
 			}
 
 			// Determine Width
 			if (oldY < endY) {
-				tempY = oldY;
-				width = endY - oldY;
+				height = endY - oldY;
 			} else {
-				tempY = endY;
-				width = oldY - endY;
+				height = oldY - endY;
 			}
 
 			WritableImage image = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
 			canvas.snapshot(null, image);
 						
-			WritableImage croppedImage = new WritableImage(image.getPixelReader(), (int)tempX, (int)tempY, (int)width, (int)height);
-			gc.drawImage(croppedImage, tempX, tempY);
+			//WritableImage croppedImage = new WritableImage(image.getPixelReader(), (int)oldX, (int)oldY, (int)width, (int)height);
+			clear(gc, canvas);
+			//gc.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), oldX, oldY, width, height);
+			gc.drawImage(image, oldX, oldY, width, height, oldX, oldY, width, height); //Select Tool
+			//gc.drawImage(image, oldX, oldY, width, height, 0, 0, image.getWidth(), image.getHeight()); //Crop Tool
 		}
 
 	}
