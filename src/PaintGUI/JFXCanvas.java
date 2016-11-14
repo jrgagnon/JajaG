@@ -153,6 +153,9 @@ public class JFXCanvas {
 		case 7:
 			cropImage(gc, canvas);
 			break;
+		case 8:
+			selectImage(gc, canvas);
+			break;
 		default:
 			System.out.println("Default");
 			break;
@@ -165,7 +168,7 @@ public class JFXCanvas {
 			// find lowest x and y, then gain shape size
 			double height;
 			double width;
-			
+
 			// Determine Length
 			if (oldX < endX) {
 				width = endX - oldX;
@@ -182,14 +185,40 @@ public class JFXCanvas {
 
 			WritableImage image = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
 			canvas.snapshot(null, image);
-						
-			//WritableImage croppedImage = new WritableImage(image.getPixelReader(), (int)oldX, (int)oldY, (int)width, (int)height);
+
 			clear(gc, canvas);
-			//gc.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), oldX, oldY, width, height);
-			gc.drawImage(image, oldX, oldY, width, height, oldX, oldY, width, height); //Select Tool
-			//gc.drawImage(image, oldX, oldY, width, height, 0, 0, image.getWidth(), image.getHeight()); //Crop Tool
+			gc.drawImage(image, oldX, oldY, width, height, 0, 0,image.getWidth(), image.getHeight()); //Crop Tool
 		}
 
+	}
+
+	public void selectImage(GraphicsContext gc, Canvas canvas) {
+		if (pressed == 0) {
+			// find lowest x and y, then gain shape size
+			double height;
+			double width;
+
+			// Determine Length
+			if (oldX < endX) {
+				width = endX - oldX;
+			} else {
+				width = oldX - endX;
+			}
+
+			// Determine Width
+			if (oldY < endY) {
+				height = endY - oldY;
+			} else {
+				height = oldY - endY;
+			}
+
+			WritableImage image = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
+			canvas.snapshot(null, image);
+
+			clear(gc, canvas);
+			gc.drawImage(image, oldX, oldY, width, height, oldX, oldY, width, height); // Select
+																						// Tool
+		}
 	}
 
 	// Line Tool Called when tool == 0
