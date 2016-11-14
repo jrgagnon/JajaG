@@ -1,5 +1,7 @@
 package PaintGUI;
 
+import com.sun.javafx.tk.Toolkit;
+
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
@@ -318,7 +320,7 @@ public class JFXCanvas {
 
 		// If the stroke size >= 5, use custom eraser image
 		else if (gc.getLineWidth() >= 5) {
-			Image eraser = new Image("/PaintGUI/CustomCursors/EraserCursor5.png", gc.getLineWidth(), gc.getLineWidth(),
+			Image eraser = new Image("/CustomCursors/EraserCursor5.png", lineSize, lineSize,
 					true, false);
 			canvas.setCursor(new ImageCursor(eraser));
 		}
