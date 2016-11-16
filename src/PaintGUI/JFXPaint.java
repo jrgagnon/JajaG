@@ -298,6 +298,10 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 						addFont.setVisible(true);
 						fontSizeTxt.setVisible(true);
 						break;
+					case 4:
+						jc.tool = 4;
+						// lineSize.getSelectionModel().select(2);
+						break;
 					default:
 						System.out.println("Default");
 						break;
@@ -482,11 +486,25 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 		eraserBtn.setPadding(Insets.EMPTY);
 		eraserBtn.setToggleGroup(tools);
 		eraserBtn.setUserData(3);
+<<<<<<< HEAD
 		
 		ToggleButton textBtn = new ToggleButton(null, createIcon("/icons/text.png"));
 		textBtn.setPadding(Insets.EMPTY);
 		textBtn.setToggleGroup(tools);
 		textBtn.setUserData(5);
+=======
+		//eraserBtn.setStyle("-fx-base: salmon;");
+		
+		Image fillImage = new Image(getClass().getResourceAsStream("/icons/fill.png"));
+		ImageView scaledFill = new ImageView(fillImage);
+		scaledFill.setFitHeight(fitH);
+		scaledFill.setFitWidth(fitW);
+
+		ToggleButton fillBtn = new ToggleButton(null, scaledFill);
+		fillBtn.setPadding(Insets.EMPTY);
+		fillBtn.setToggleGroup(tools);
+		fillBtn.setUserData(4);
+>>>>>>> refs/remotes/origin/fillTool
 
 		HBox toolBox = new HBox();
 
@@ -494,7 +512,11 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 		toolBox.getChildren().add(rectButton);
 		toolBox.getChildren().add(circleBtn);
 		toolBox.getChildren().add(eraserBtn);
+<<<<<<< HEAD
 		toolBox.getChildren().add(textBtn);
+=======
+		toolBox.getChildren().add(fillBtn);
+>>>>>>> refs/remotes/origin/fillTool
 
 		HBox tray = new HBox();
 

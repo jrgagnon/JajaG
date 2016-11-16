@@ -142,7 +142,7 @@ public class JFXCanvas {
 			erase(gc, canvas);
 			break;
 		case 4:
-
+			fill(gc, canvas);
 			break;
 		case 5:
 			textDraw(gc);
@@ -275,6 +275,91 @@ public class JFXCanvas {
 
 	}
 
+	public void fill(GraphicsContext gc, Canvas canvas){
+		
+		if(pressed == 1){
+			try{
+				float xValue = (float) oldX;
+				float yValue = (float) oldY;
+				Point2D start = new Point2D(xValue, yValue);			
+				WritableImage writableImage = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
+				canvas.snapshot(null, writableImage);		
+				Image image = writableImage;
+				PixelReader pr = image.getPixelReader();
+				Paint newColor = p;
+				Paint oldColor = pr.getColor((int)oldX, (int)oldY);
+				changeToolSize(gc, 1.00);
+				boolean[][] mark = new boolean[(int)canvas.getWidth()][(int)canvas.getHeight()];
+				
+				floodFill(gc, canvas, mark, start, oldColor, newColor, pr);
+				
+			}
+			catch(Exception ex){
+				System.out.println(ex.getMessage());
+				System.out.println("hi");
+			}
+//			
+		}
+		
+	}
+	
+	public void floodFill(GraphicsContext gc, Canvas canvas, boolean [][] mark, Point2D point, Paint old, Paint target, PixelReader pr){
+		
+		// create queue of points that will store all the points to be filled
+        Queue<Point2D> queue = new LinkedList<Point2D>();
+        queue.add(point);
+        
+        while(!queue.isEmpty()){
+        	
+        	Point2D p = queue.remove();
+        	//check point pos
+        	if (p.x > 0 && p.x < canvas.getWidth() - 1 && p.y > 0 && p.y < canvas.getHeight() -1){
+        		//paint point
+        		if(mark[(int) p.x][(int) p.y]){continue;}
+        		mark[(int) p.x][(int) p.y] = true;
+        		gc.strokeLine(p.x, p.y, p.x, p.y);
+        		
+        		// test left
+                if (pr.getColor((int)p.x - 1, (int)p.y).equals(old))
+                {
+                	if(!mark[(int) p.x-1][(int) p.y]){
+                		queue.add(new Point2D(p.x - 1, p.y));
+                    }
+                }
+                // test right
+                if (pr.getColor((int)p.x + 1, (int)p.y).equals(old))
+                {
+                	if(!mark[(int) p.x+1][(int) p.y]){
+                		queue.add(new Point2D(p.x + 1, p.y));
+                	}
+                }
+                // test up
+                if (pr.getColor((int)p.x, (int)p.y - 1).equals(old))
+                {
+                	if(!mark[(int) p.x][(int) p.y-1]){
+                		queue.add(new Point2D(p.x, p.y - 1));
+                	}
+                }
+                // test down
+                if (pr.getColor((int)p.x, (int)p.y + 1).equals(old))
+                {
+                	if(!mark[(int) p.x][(int) p.y+1]){
+                		queue.add(new Point2D(p.x, p.y + 1));
+                	}
+                }
+        	}
+        	
+        }
+        
+
+	}
+	
+	private static void sleep(int msec) {
+        try {
+            Thread.currentThread().sleep(msec);
+        } catch (InterruptedException e) { }
+    }
+
 	public void changeLineSize(GraphicsContext gc) {
 
 		switch (lineSize) {
@@ -398,3 +483,7 @@ public class JFXCanvas {
 	}
 
 }
+	
+
+	
+	
