@@ -1,7 +1,5 @@
 package PaintGUI;
 
-import com.sun.javafx.tk.Toolkit;
-
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
@@ -312,21 +310,13 @@ public class JFXCanvas {
 	// Eraser Tool Called when tool == 1
 	public void erase(GraphicsContext gc, Canvas canvas) {
 
-		gc.setStroke(Color.WHITE);
-
-		// Adjust cursor based on line width
-		if (gc.getLineWidth() < 5)
-			canvas.setCursor(Cursor.CROSSHAIR);
-
-		// If the stroke size >= 5, use custom eraser image
-		else if (gc.getLineWidth() >= 5) {
-			Image eraser = new Image("/CustomCursors/EraserCursor5.png", lineSize, lineSize,
-					true, false);
-			canvas.setCursor(new ImageCursor(eraser));
-		}
+		gc.setStroke(Color.WHITE);		
 
 		// Start the path from the new mouse location on click
 		if (pressed == 1) {
+			Image eraser = new Image("/CustomCursors/EraserCursor5.png", lineSize, lineSize,
+					true, false);
+			canvas.setCursor(new ImageCursor(eraser));			
 			gc.beginPath();
 			gc.moveTo(oldX, oldY);
 			gc.stroke();
