@@ -6,6 +6,8 @@ import java.awt.image.RenderedImage;
 import java.awt.image.WritableRaster;
 import java.io.IOException;
 import java.util.Hashtable;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -258,24 +260,171 @@ public class JFXCanvas {
 	public void fill(GraphicsContext gc, Canvas canvas){
 		
 		if(pressed == 1){
-			float xValue = (float) oldX;
-			float yValue = (float) oldY;
-			Point2D start = new Point2D(xValue, yValue);			
-			WritableImage writableImage = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
-			canvas.snapshot(null, writableImage);		
-			Image image = writableImage;
-			PixelReader pr = image.getPixelReader();
-			Paint newColor = p;
-			Paint oldColor = pr.getColor((int)oldX, (int)oldY);
-			changeToolSize(gc, 1.00);
-			gc.strokeLine(start.x, start.y, start.x, start.y);
+			try{
+				float xValue = (float) oldX;
+				float yValue = (float) oldY;
+				Point2D start = new Point2D(xValue, yValue);			
+				WritableImage writableImage = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
+				canvas.snapshot(null, writableImage);		
+				Image image = writableImage;
+				PixelReader pr = image.getPixelReader();
+				Paint newColor = p;
+				Paint oldColor = pr.getColor((int)oldX, (int)oldY);
+				changeToolSize(gc, 1.00);
+				boolean[][] mark = new boolean[(int)canvas.getWidth()][(int)canvas.getHeight()];
+				
+				floodFill(gc, canvas, mark, start, oldColor, newColor, pr);
+				
+//				Point2D up = new Point2D(xValue, yValue+1);
+//				//fillUp(gc, up, oldColor, pr);
+//				Point2D down = new Point2D(xValue, yValue-1);
+//				fillDown(gc, up, oldColor, pr);
+//				Point2D left = new Point2D(xValue-1, yValue);
+//				fillLeft(gc, up, oldColor, pr);
+//				Point2D right = new Point2D(xValue+1, yValue);
+//				fillRight(gc, up, oldColor, pr);
+				
+				//fillRecursion(gc, canvas, start, start, oldColor, writableImage);
+			}
+			catch(Exception ex){
+				System.out.println(ex.getMessage());
+				System.out.println("hi");
+			}
+//			gc.strokeLine(start.x, start.y, start.x, start.y);
+//			Point2D up = new Point2D(xValue, yValue+1);
+//			Point2D down = new Point2D(xValue, yValue-1);
+//			Point2D left = new Point2D(xValue-1, yValue);
+//			Point2D right = new Point2D(xValue+1, yValue);
+//			fillRecursion(gc, up, oldColor, pr);
+//			fillRecursion(gc, down, oldColor, pr);
+//			fillRecursion(gc, right, oldColor, pr);
+//			fillRecursion(gc, left, oldColor, pr);
 		}
 		
 	}
 	
-	public void fillRecursion(GraphicsContext gc, Point2D start, Paint color, PixelReader pr){
+	public void floodFill(GraphicsContext gc, Canvas canvas, boolean [][] mark, Point2D point, Paint old, Paint target, PixelReader pr){
 		
+		// create queue of points that will store all the points to be filled
+        Queue<Point2D> queue = new LinkedList<Point2D>();
+        queue.add(point);
+        
+        while(!queue.isEmpty()){
+        	
+        	Point2D p = queue.remove();
+        	//check point pos
+        	if (p.x > 0 && p.x < canvas.getWidth() - 1 && p.y > 0 && p.y < canvas.getHeight() -1){
+        		//paint point
+        		if(mark[(int) p.x][(int) p.y]){continue;}
+        		mark[(int) p.x][(int) p.y] = true;
+        		gc.strokeLine(p.x, p.y, p.x, p.y);
+        		
+        		// test left
+                if (pr.getColor((int)p.x - 1, (int)p.y).equals(old))
+                {
+                	if(!mark[(int) p.x-1][(int) p.y]){
+                		queue.add(new Point2D(p.x - 1, p.y));
+                    }
+                }
+                // test right
+                if (pr.getColor((int)p.x + 1, (int)p.y).equals(old))
+                {
+                	if(!mark[(int) p.x+1][(int) p.y]){
+                		queue.add(new Point2D(p.x + 1, p.y));
+                	}
+                }
+                // test up
+                if (pr.getColor((int)p.x, (int)p.y - 1).equals(old))
+                {
+                	if(!mark[(int) p.x][(int) p.y-1]){
+                		queue.add(new Point2D(p.x, p.y - 1));
+                	}
+                }
+                // test down
+                if (pr.getColor((int)p.x, (int)p.y + 1).equals(old))
+                {
+                	if(!mark[(int) p.x][(int) p.y+1]){
+                		queue.add(new Point2D(p.x, p.y + 1));
+                	}
+                }
+        	}
+        	
+        }
+        
+//		//tests
+//		if(point.x < 0){return;}
+//		if(point.y < 0){return;}
+//		if(point.x > gc.getCanvas().getWidth()){return;}
+//		if(point.y > gc.getCanvas().getHeight()){return;}
+//		if(mark[(int) point.x][(int) point.y]){return;}
+//		Paint pointColor = pr.getColor((int)point.x, (int)point.y);
+//		if(!pointColor.equals(old)){return;}
+//		
+//		System.out.println("I ran. Paint = " + pointColor + " and " + old + " Point = (" + point.x + ", " + point.y +")");
+//		
+//		//paint point and mark point as painted (true)
+//		gc.strokeLine(point.x, point.y, point.x, point.y);		
+//		mark[(int) point.x][(int) point.y] = true;
+//		//sleep(25);
+//		
+//		//recursively check surrounding points
+//		Point2D up = new Point2D(point.x, point.y-1);
+//		Point2D down = new Point2D(point.x, point.y+1);
+//		Point2D left = new Point2D(point.x-1, point.y);
+//		Point2D right = new Point2D(point.x+1, point.y);
+//		floodFill(gc, mark, up, old, target, pr);
+//		floodFill(gc, mark, down, old, target, pr);
+//		floodFill(gc, mark, left, old, target, pr);
+//		floodFill(gc, mark, right, old, target, pr);
+	}
+	
+	private static void sleep(int msec) {
+        try {
+            Thread.currentThread().sleep(msec);
+        } catch (InterruptedException e) { }
+    }
+	
+	public void fillDown(GraphicsContext gc, Point2D point, Paint old, PixelReader pr){
 		
+	}
+	
+	public void fillLeft(GraphicsContext gc, Point2D point, Paint old, PixelReader pr){
+		
+	}
+	
+	public void fillRight(GraphicsContext gc, Point2D point, Paint old, PixelReader pr){
+		
+	}
+	
+	
+	
+	//keep track of old point so you can draw a line from new to old
+	public void fillRecursion(GraphicsContext gc, Canvas canvas, Point2D prevPoint, Point2D point, Paint old, WritableImage writableImage){
+		
+		canvas.snapshot(null, writableImage);		
+		Image image = writableImage;
+		PixelReader pr = image.getPixelReader();
+		Paint pointColor = pr.getColor((int)point.x, (int)point.y);
+		if(pointColor.equals(old)){
+			System.out.println("I ran. Paint = " + pointColor + " and " + old + " Point = (" + point.x + ", " + point.y +")");
+			try{
+				//paint point and check surrounding points
+				//paint
+				gc.strokeLine(prevPoint.x, prevPoint.y, point.x, point.y);				
+				//check other points
+				Point2D up = new Point2D(point.x, point.y-1);
+				Point2D down = new Point2D(point.x, point.y+1);
+				Point2D left = new Point2D(point.x-1, point.y);
+				Point2D right = new Point2D(point.x+1, point.y);
+				fillRecursion(gc, canvas, point, up, old, writableImage);
+				fillRecursion(gc, canvas, point, down, old, writableImage);
+				fillRecursion(gc, canvas, point, right, old, writableImage);
+				fillRecursion(gc, canvas, point, left, old, writableImage);
+			}
+			catch(Exception ex){
+				System.out.println(ex.getMessage());
+			}
+		}
 		
 	}
 

@@ -186,6 +186,10 @@ public class JFXPaint extends Application {
 						jc.tool = 3;
 						// lineSize.getSelectionModel().select(2);
 						break;
+					case 4:
+						jc.tool = 4;
+						// lineSize.getSelectionModel().select(2);
+						break;
 					default:
 						System.out.println("Default");
 						break;
