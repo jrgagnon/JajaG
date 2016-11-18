@@ -156,10 +156,74 @@ public class JFXCanvas {
 		case 6:
 			imageInsert(gc, canvas);
 			break;
+		case 7:
+			cropImage(gc, canvas);
+			break;
+		case 8:
+			selectImage(gc, canvas);
+			break;
 		default:
 			System.out.println("Default");
 			break;
 
+		}
+	}
+
+	private void cropImage(GraphicsContext gc, Canvas canvas) {
+		if (pressed == 0) {
+			// find lowest x and y, then gain shape size
+			double height;
+			double width;
+
+			// Determine Length
+			if (oldX < endX) {
+				width = endX - oldX;
+			} else {
+				width = oldX - endX;
+			}
+
+			// Determine Width
+			if (oldY < endY) {
+				height = endY - oldY;
+			} else {
+				height = oldY - endY;
+			}
+
+			WritableImage image = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
+			canvas.snapshot(null, image);
+
+			clear(gc, canvas);
+			gc.drawImage(image, oldX, oldY, width, height, 0, 0,image.getWidth(), image.getHeight()); //Crop Tool
+		}
+
+	}
+
+	public void selectImage(GraphicsContext gc, Canvas canvas) {
+		if (pressed == 0) {
+			// find lowest x and y, then gain shape size
+			double height;
+			double width;
+
+			// Determine Length
+			if (oldX < endX) {
+				width = endX - oldX;
+			} else {
+				width = oldX - endX;
+			}
+
+			// Determine Width
+			if (oldY < endY) {
+				height = endY - oldY;
+			} else {
+				height = oldY - endY;
+			}
+
+			WritableImage image = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
+			canvas.snapshot(null, image);
+
+			clear(gc, canvas);
+			gc.drawImage(image, oldX, oldY, width, height, oldX, oldY, width, height); // Select
+																						// Tool
 		}
 	}
 
@@ -252,21 +316,13 @@ public class JFXCanvas {
 	// Eraser Tool Called when tool == 1
 	public void erase(GraphicsContext gc, Canvas canvas) {
 
-		gc.setStroke(Color.WHITE);
-
-		// Adjust cursor based on line width
-		if (gc.getLineWidth() < 5)
-			canvas.setCursor(Cursor.CROSSHAIR);
-
-		// If the stroke size >= 5, use custom eraser image
-		else if (gc.getLineWidth() >= 5) {
-			Image eraser = new Image("/PaintGUI/CustomCursors/EraserCursor5.png", gc.getLineWidth(), gc.getLineWidth(),
-					true, false);
-			canvas.setCursor(new ImageCursor(eraser));
-		}
+		gc.setStroke(Color.WHITE);		
 
 		// Start the path from the new mouse location on click
 		if (pressed == 1) {
+			Image eraser = new Image("/CustomCursors/EraserCursor5.png", lineSize, lineSize,
+					true, false);
+			canvas.setCursor(new ImageCursor(eraser));			
 			gc.beginPath();
 			gc.moveTo(oldX, oldY);
 			gc.stroke();
@@ -473,18 +529,18 @@ public class JFXCanvas {
 		}
 
 	}
-	
+
 	public void setText(String text) {
 		textString = text;
 	}
 
 	public void setFont(String f) {
-		font = f;		
+		font = f;
 	}
 
 	public void changeFont(GraphicsContext gc) {
-		//FontSelect fc = new FontSelect();
-		//String fontFormated = fc.select(font, bold, italic);
+		// FontSelect fc = new FontSelect();
+		// String fontFormated = fc.select(font, bold, italic);
 		gc.setFont(Font.font(font, fontSize));
 	}
 

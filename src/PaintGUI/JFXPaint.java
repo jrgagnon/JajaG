@@ -298,6 +298,14 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 						addFont.setVisible(true);
 						fontSizeTxt.setVisible(true);
 						break;
+					case 7:
+						jc.tool = 7;
+						textReset(textBox, cb, bold, italic, subFont, addFont, fontSizeTxt);
+						break;
+					case 8:
+						jc.tool = 8;
+						textReset(textBox, cb, bold, italic, subFont, addFont, fontSizeTxt);
+						break;
 					default:
 						System.out.println("Default");
 						break;
@@ -487,6 +495,7 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 		textBtn.setPadding(Insets.EMPTY);
 		textBtn.setToggleGroup(tools);
 		textBtn.setUserData(5);
+<<<<<<< HEAD
 		//eraserBtn.setStyle("-fx-base: salmon;");
 		
 		Image fillImage = new Image(getClass().getResourceAsStream("/icons/fill.png"));
@@ -498,6 +507,18 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 		fillBtn.setPadding(Insets.EMPTY);
 		fillBtn.setToggleGroup(tools);
 		fillBtn.setUserData(4);
+=======
+		
+		ToggleButton cropBtn = new ToggleButton(null, createIcon("/icons/crop.png"));
+		cropBtn.setPadding(Insets.EMPTY);
+		cropBtn.setToggleGroup(tools);
+		cropBtn.setUserData(7);
+		
+		ToggleButton selectBtn = new ToggleButton(null, createIcon("/icons/select.png"));
+		selectBtn.setPadding(Insets.EMPTY);
+		selectBtn.setToggleGroup(tools);
+		selectBtn.setUserData(8);
+>>>>>>> refs/remotes/origin/crop
 
 		HBox toolBox = new HBox();
 
@@ -505,8 +526,14 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 		toolBox.getChildren().add(rectButton);
 		toolBox.getChildren().add(circleBtn);
 		toolBox.getChildren().add(eraserBtn);
+<<<<<<< HEAD
 		toolBox.getChildren().add(textBtn);
 		toolBox.getChildren().add(fillBtn);
+=======
+		toolBox.getChildren().add(cropBtn);
+		toolBox.getChildren().add(selectBtn);
+		toolBox.getChildren().add(textBtn);		
+>>>>>>> refs/remotes/origin/crop
 
 		HBox tray = new HBox();
 
@@ -518,8 +545,7 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 		tray.getChildren().add(cb);
 		tray.getChildren().add(subFont);
 		tray.getChildren().add(fontSizeTxt);
-		tray.getChildren().add(addFont);
-		
+		tray.getChildren().add(addFont);		
 
 		VBox vbox = new VBox();
 
