@@ -495,7 +495,6 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 		textBtn.setPadding(Insets.EMPTY);
 		textBtn.setToggleGroup(tools);
 		textBtn.setUserData(5);
-<<<<<<< HEAD
 		//eraserBtn.setStyle("-fx-base: salmon;");
 		
 		Image fillImage = new Image(getClass().getResourceAsStream("/icons/fill.png"));
@@ -507,7 +506,6 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 		fillBtn.setPadding(Insets.EMPTY);
 		fillBtn.setToggleGroup(tools);
 		fillBtn.setUserData(4);
-=======
 		
 		ToggleButton cropBtn = new ToggleButton(null, createIcon("/icons/crop.png"));
 		cropBtn.setPadding(Insets.EMPTY);
@@ -518,7 +516,6 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 		selectBtn.setPadding(Insets.EMPTY);
 		selectBtn.setToggleGroup(tools);
 		selectBtn.setUserData(8);
->>>>>>> refs/remotes/origin/crop
 
 		HBox toolBox = new HBox();
 
@@ -526,14 +523,11 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 		toolBox.getChildren().add(rectButton);
 		toolBox.getChildren().add(circleBtn);
 		toolBox.getChildren().add(eraserBtn);
-<<<<<<< HEAD
-		toolBox.getChildren().add(textBtn);
 		toolBox.getChildren().add(fillBtn);
-=======
 		toolBox.getChildren().add(cropBtn);
 		toolBox.getChildren().add(selectBtn);
-		toolBox.getChildren().add(textBtn);		
->>>>>>> refs/remotes/origin/crop
+		toolBox.getChildren().add(textBtn);
+		
 
 		HBox tray = new HBox();
 

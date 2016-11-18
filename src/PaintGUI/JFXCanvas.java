@@ -170,6 +170,7 @@ public class JFXCanvas {
 	}
 
 	private void cropImage(GraphicsContext gc, Canvas canvas) {
+		canvas.setCursor(Cursor.CROSSHAIR); // Default cursor
 		if (pressed == 0) {
 			// find lowest x and y, then gain shape size
 			double height;
@@ -199,6 +200,7 @@ public class JFXCanvas {
 	}
 
 	public void selectImage(GraphicsContext gc, Canvas canvas) {
+		canvas.setCursor(Cursor.CROSSHAIR); // Default cursor
 		if (pressed == 0) {
 			// find lowest x and y, then gain shape size
 			double height;
@@ -338,7 +340,7 @@ public class JFXCanvas {
 	}
 
 	public void fill(GraphicsContext gc, Canvas canvas){
-		
+		canvas.setCursor(Cursor.CROSSHAIR); // Default cursor
 		if(pressed == 1){
 			try{
 				float xValue = (float) oldX;
@@ -415,12 +417,6 @@ public class JFXCanvas {
         
 
 	}
-	
-	private static void sleep(int msec) {
-        try {
-            Thread.currentThread().sleep(msec);
-        } catch (InterruptedException e) { }
-    }
 
 	public void changeLineSize(GraphicsContext gc) {
 
