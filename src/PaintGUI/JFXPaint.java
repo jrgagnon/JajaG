@@ -20,7 +20,11 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
@@ -41,7 +45,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+
 import java.io.File;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -60,7 +67,7 @@ public class JFXPaint extends Application {
 	public double fitH = 40.0;
 
 	public double toolSize = 1.00;
-	
+
 	public File file = null;
 
 	public static void main(String[] args) {
@@ -86,6 +93,42 @@ public class JFXPaint extends Application {
 		Canvas canvas = new Canvas(cw, ch);
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		jc.draw(gc, canvas);
+
+		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+			public void handle(WindowEvent we) {
+				Alert alert = new Alert(AlertType.CONFIRMATION);
+				alert.setTitle("Unsaved Changes");
+				alert.setHeaderText("You have unsaved changes would you like to save?");
+				// alert.setContentText("Choose your option.");
+
+				ButtonType buttonTypeOne = new ButtonType("Yes");
+				ButtonType buttonTypeTwo = new ButtonType("No");
+				
+				alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo);
+
+				Optional<ButtonType> result = alert.showAndWait();
+				if (result.get() == buttonTypeOne) {
+					if (file == null) {
+						file = getSaveLocation(stage);
+					}
+
+					if (file != null) {
+						try {
+							WritableImage writableImage = new WritableImage((int) cw, (int) ch);
+							canvas.snapshot(null, writableImage);
+							RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
+							ImageIO.write(renderedImage, "png", file);
+						} catch (IOException ex) {
+							Logger.getLogger(JFXPaint.class.getName()).log(Level.SEVERE, null, ex);
+						}
+					}
+				} else if (result.get() == buttonTypeTwo) {
+					// ... user chose "Two"
+				} else {
+
+				}
+			}
+		});
 
 		// new tool size
 		NumberTextField toolSizeTxt = new NumberTextField();
@@ -142,10 +185,10 @@ public class JFXPaint extends Application {
 		textBox.setTooltip(textTooltip);
 		textBox.setVisible(false);
 
-final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Roman" };
+		final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Roman" };
 
 		ChoiceBox cb = new ChoiceBox(FXCollections.observableArrayList("Arial", "Courier", "Serif", "Times New Roman"));
-		
+
 		cb.setPrefSize(90, 30);
 		cb.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 
@@ -174,7 +217,7 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 			}
 		});
 		bold.setVisible(false);
-		
+
 		Button italic = new Button("I");
 		italic.setPrefSize(30, 30);
 		italic.setOnAction(new EventHandler<ActionEvent>() {
@@ -191,7 +234,7 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 			}
 		});
 		italic.setVisible(false);
-		
+
 		NumberTextField fontSizeTxt = new NumberTextField();
 		fontSizeTxt.setPrefSize(50, 30);
 		fontSizeTxt.setAlignment(Pos.BASELINE_RIGHT);
@@ -333,13 +376,13 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 		// If non was selected has you choose a location and name
 		MenuItem save = new MenuItem("Save");
 		save.setAccelerator(KeyCombination.keyCombination("Ctrl+S"));
-		
+
 		save.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent t) {
-				
-				if(file == null){
+
+				if (file == null) {
 					file = getSaveLocation(stage);
 				}
 
@@ -356,18 +399,18 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 			}
 
 		});
-		
+
 		// Saves the canvas as a new file
 		// Opens the dialog for you to choose location and name
 		MenuItem saveAs = new MenuItem("Save As");
-				
+
 		saveAs.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent t) {
-				
+
 				file = getSaveLocation(stage);
-				
+
 				if (file != null) {
 					try {
 						WritableImage writableImage = new WritableImage((int) cw, (int) ch);
@@ -381,7 +424,7 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 			}
 
 		});
-		
+
 		// Open Option
 		MenuItem open = new MenuItem("Open");
 
@@ -406,11 +449,43 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 
 			@Override
 			public void handle(ActionEvent t) {
-				jc.clear(gc, canvas);
+				Alert alert = new Alert(AlertType.CONFIRMATION);
+				alert.setTitle("Unsaved Changes");
+				alert.setHeaderText("You have unsaved changes would you like to save?");
+				// alert.setContentText("Choose your option.");
+
+				ButtonType buttonTypeOne = new ButtonType("Yes");
+				ButtonType buttonTypeTwo = new ButtonType("No");
+				ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+
+				alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo, buttonTypeCancel);
+
+				Optional<ButtonType> result = alert.showAndWait();
+				if (result.get() == buttonTypeOne) {
+					if (file == null) {
+						file = getSaveLocation(stage);
+					}
+
+					if (file != null) {
+						try {
+							WritableImage writableImage = new WritableImage((int) cw, (int) ch);
+							canvas.snapshot(null, writableImage);
+							RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
+							ImageIO.write(renderedImage, "png", file);
+						} catch (IOException ex) {
+							Logger.getLogger(JFXPaint.class.getName()).log(Level.SEVERE, null, ex);
+						}
+					}
+					jc.clear(gc, canvas);
+				} else if (result.get() == buttonTypeTwo) {
+					jc.clear(gc, canvas);
+				} else {
+
+				}				
 			}
 		});
-		
-		// Undo option 
+
+		// Undo option
 		MenuItem undo = new MenuItem("Undo");
 		undo.setAccelerator(KeyCombination.keyCombination("Ctrl+Z"));
 		undo.setOnAction(new EventHandler<ActionEvent>() {
@@ -420,7 +495,7 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 				jc.undo(gc, canvas);
 			}
 		});
-		
+
 		// Redo option
 		MenuItem redo = new MenuItem("Redo");
 		redo.setAccelerator(KeyCombination.keyCombination("Ctrl+Y"));
@@ -431,7 +506,7 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 				jc.redo(gc, canvas);
 			}
 		});
-		
+
 		MenuItem image = new MenuItem("image");
 		image.setAccelerator(KeyCombination.keyCombination("Ctrl+I"));
 		image.setOnAction(new EventHandler<ActionEvent>() {
@@ -452,9 +527,7 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 		menuFile.getItems().addAll(clear, open, save, saveAs);
 		menuEdit.getItems().addAll(undo, redo);
 		menuInsert.getItems().addAll(image);
-		
-		
-		
+
 		// Declare the color picker
 		// final ColorPicker colorPicker = new ColorPicker();
 		final ColorPicker colorPicker = new ColorPicker(Color.BLACK);
@@ -475,28 +548,28 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 		drawLineBtn.setToggleGroup(tools);
 		drawLineBtn.setUserData(0);
 		drawLineBtn.setSelected(true);
-		
+
 		ToggleButton rectButton = new ToggleButton(null, createIcon("/icons/square.png"));
 		rectButton.setPadding(Insets.EMPTY);
 		rectButton.setToggleGroup(tools);
 		rectButton.setUserData(1);
-		
+
 		ToggleButton circleBtn = new ToggleButton(null, createIcon("/icons/circle.png"));
 		circleBtn.setPadding(Insets.EMPTY);
 		circleBtn.setToggleGroup(tools);
 		circleBtn.setUserData(2);
-		
+
 		ToggleButton eraserBtn = new ToggleButton(null, createIcon("/icons/eraser.png"));
 		eraserBtn.setPadding(Insets.EMPTY);
 		eraserBtn.setToggleGroup(tools);
 		eraserBtn.setUserData(3);
-		
+
 		ToggleButton textBtn = new ToggleButton(null, createIcon("/icons/text.png"));
 		textBtn.setPadding(Insets.EMPTY);
 		textBtn.setToggleGroup(tools);
 		textBtn.setUserData(5);
-		//eraserBtn.setStyle("-fx-base: salmon;");
-		
+		// eraserBtn.setStyle("-fx-base: salmon;");
+
 		Image fillImage = new Image(getClass().getResourceAsStream("/icons/fill.png"));
 		ImageView scaledFill = new ImageView(fillImage);
 		scaledFill.setFitHeight(fitH);
@@ -506,12 +579,12 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 		fillBtn.setPadding(Insets.EMPTY);
 		fillBtn.setToggleGroup(tools);
 		fillBtn.setUserData(4);
-		
+
 		ToggleButton cropBtn = new ToggleButton(null, createIcon("/icons/crop.png"));
 		cropBtn.setPadding(Insets.EMPTY);
 		cropBtn.setToggleGroup(tools);
 		cropBtn.setUserData(7);
-		
+
 		ToggleButton selectBtn = new ToggleButton(null, createIcon("/icons/select.png"));
 		selectBtn.setPadding(Insets.EMPTY);
 		selectBtn.setToggleGroup(tools);
@@ -527,7 +600,6 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 		toolBox.getChildren().add(cropBtn);
 		toolBox.getChildren().add(selectBtn);
 		toolBox.getChildren().add(textBtn);
-		
 
 		HBox tray = new HBox();
 
@@ -539,7 +611,7 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 		tray.getChildren().add(cb);
 		tray.getChildren().add(subFont);
 		tray.getChildren().add(fontSizeTxt);
-		tray.getChildren().add(addFont);		
+		tray.getChildren().add(addFont);
 
 		VBox vbox = new VBox();
 
@@ -553,6 +625,7 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 		((Group) scene.getRoot()).getChildren().add(vbox);
 		stage.setScene(scene);
 		stage.show();
+
 	}
 
 	/**
@@ -561,7 +634,8 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 	 * @param textBox:
 	 *            the textbox to be reset
 	 */
-	public void textReset(TextField textBox, ChoiceBox cb, Button bold, Button italic, Button add, Button sub, TextField fontSize) {
+	public void textReset(TextField textBox, ChoiceBox cb, Button bold, Button italic, Button add, Button sub,
+			TextField fontSize) {
 		textBox.clear();
 		textBox.setVisible(false);
 		cb.setVisible(false);
@@ -589,6 +663,7 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 
 	/**
 	 * Opens an image from file to be used
+	 * 
 	 * @return the open image if one is open, null if one is not
 	 */
 	public Image openImage() {
@@ -622,8 +697,8 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 
 		return null;
 	}
-	
-	public File getSaveLocation(Stage stage){
+
+	public File getSaveLocation(Stage stage) {
 		FileChooser fileChooser = new FileChooser();
 
 		// Set extension filter
@@ -633,7 +708,7 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 		FileChooser.ExtensionFilter extFilterpng = new FileChooser.ExtensionFilter("png files (*.png)", "*.png",
 				"*.PNG");
 		fileChooser.getExtensionFilters().addAll(extFilterjpg, extFilterpng);
-		
+
 		return fileChooser.showSaveDialog(stage);
 	}
 }
