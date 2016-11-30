@@ -63,6 +63,9 @@ public class JFXPaint extends Application {
 	// Variables for canvas width and height
 	public double cw = 760;
 	public double ch = 480;
+	
+	public double saveH = 760;
+	public double saveW = 480;
 
 	public double fitW = 40.0;
 	public double fitH = 40.0;
@@ -125,7 +128,7 @@ public class JFXPaint extends Application {
 
 						if (file != null) {
 							try {
-								WritableImage writableImage = new WritableImage((int) cw, (int) ch);
+								WritableImage writableImage = new WritableImage((int) saveW, (int) saveH);
 								canvas.snapshot(null, writableImage);
 								RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
 								ImageIO.write(renderedImage, "png", file);
@@ -299,6 +302,10 @@ public class JFXPaint extends Application {
 					Number newSceneWidth) {
 				cw = ((double) newSceneWidth - 40.0);
 				
+				if(cw > saveW){
+					saveW = cw;
+				}
+				
 				// Increase canvas size on window expansion
 				if (canvas.getWidth() < cw)
 					canvas.setWidth(cw);
@@ -312,6 +319,10 @@ public class JFXPaint extends Application {
 			public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight,
 					Number newSceneHeight) {
 				ch = ((double) newSceneHeight - 130.0);
+
+				if(ch > saveH){
+					saveH = ch;
+				}
 				
 				if (canvas.getHeight() < ch) 
 					canvas.setHeight(ch);
@@ -412,7 +423,7 @@ public class JFXPaint extends Application {
 
 				if (file != null) {
 					try {
-						WritableImage writableImage = new WritableImage((int) cw, (int) ch);
+						WritableImage writableImage = new WritableImage((int) saveW, (int) saveH);
 						canvas.snapshot(null, writableImage);
 						RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
 						ImageIO.write(renderedImage, "png", file);
@@ -437,7 +448,7 @@ public class JFXPaint extends Application {
 
 				if (file != null) {
 					try {
-						WritableImage writableImage = new WritableImage((int) cw, (int) ch);
+						WritableImage writableImage = new WritableImage((int) saveW, (int) saveH);
 						canvas.snapshot(null, writableImage);
 						RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
 						ImageIO.write(renderedImage, "png", file);
@@ -492,7 +503,7 @@ public class JFXPaint extends Application {
 
 					if (file != null) {
 						try {
-							WritableImage writableImage = new WritableImage((int) cw, (int) ch);
+							WritableImage writableImage = new WritableImage((int) saveW, (int) saveH);
 							canvas.snapshot(null, writableImage);
 							RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
 							ImageIO.write(renderedImage, "png", file);
