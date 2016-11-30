@@ -21,7 +21,11 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
@@ -46,7 +50,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+
 import java.io.File;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -99,6 +106,45 @@ public class JFXPaint extends Application {
 
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		jc.draw(gc, canvas);
+
+		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+			public void handle(WindowEvent we) {
+				if (jc.clearCanvas == 1) {
+					Alert alert = new Alert(AlertType.CONFIRMATION);
+
+					alert.setTitle("Unsaved Changes");
+					alert.setHeaderText("You have unsaved changes would you like to save?");
+					// alert.setContentText("Choose your option.");
+
+					ButtonType buttonTypeOne = new ButtonType("Yes");
+					ButtonType buttonTypeTwo = new ButtonType("No");
+
+					alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo);
+
+					Optional<ButtonType> result = alert.showAndWait();
+					if (result.get() == buttonTypeOne) {
+						if (file == null) {
+							file = getSaveLocation(stage);
+						}
+
+						if (file != null) {
+							try {
+								WritableImage writableImage = new WritableImage((int) cw, (int) ch);
+								canvas.snapshot(null, writableImage);
+								RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
+								ImageIO.write(renderedImage, "png", file);
+							} catch (IOException ex) {
+								Logger.getLogger(JFXPaint.class.getName()).log(Level.SEVERE, null, ex);
+							}
+						}
+					} else if (result.get() == buttonTypeTwo) {
+						// ... user chose "Two"
+					} else {
+
+					}
+				}
+			}
+		});
 
 		// new tool size
 		NumberTextField toolSizeTxt = new NumberTextField();
@@ -354,7 +400,11 @@ public class JFXPaint extends Application {
 			@Override
 			public void handle(ActionEvent t) {
 
+<<<<<<< HEAD
 				if(file == null){
+=======
+				if (file == null) {
+>>>>>>> refs/remotes/origin/miscfix
 					file = getSaveLocation(stage);
 				}
 
@@ -421,11 +471,47 @@ public class JFXPaint extends Application {
 
 			@Override
 			public void handle(ActionEvent t) {
-				jc.clear(gc, canvas);
+				Alert alert = new Alert(AlertType.CONFIRMATION);
+				alert.setTitle("Unsaved Changes");
+				alert.setHeaderText("You have unsaved changes would you like to save?");
+				// alert.setContentText("Choose your option.");
+
+				ButtonType buttonTypeOne = new ButtonType("Yes");
+				ButtonType buttonTypeTwo = new ButtonType("No");
+				ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+
+				alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo, buttonTypeCancel);
+
+				Optional<ButtonType> result = alert.showAndWait();
+				if (result.get() == buttonTypeOne) {
+					if (file == null) {
+						file = getSaveLocation(stage);
+					}
+
+					if (file != null) {
+						try {
+							WritableImage writableImage = new WritableImage((int) cw, (int) ch);
+							canvas.snapshot(null, writableImage);
+							RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
+							ImageIO.write(renderedImage, "png", file);
+						} catch (IOException ex) {
+							Logger.getLogger(JFXPaint.class.getName()).log(Level.SEVERE, null, ex);
+						}
+					}
+					jc.clear(gc, canvas);
+				} else if (result.get() == buttonTypeTwo) {
+					jc.clear(gc, canvas);
+				} else {
+
+				}
 			}
 		});
 
+<<<<<<< HEAD
 		// Undo option 
+=======
+		// Undo option
+>>>>>>> refs/remotes/origin/miscfix
 		MenuItem undo = new MenuItem("Undo");
 		undo.setAccelerator(KeyCombination.keyCombination("Ctrl+Z"));
 		undo.setOnAction(new EventHandler<ActionEvent>() {
@@ -468,8 +554,11 @@ public class JFXPaint extends Application {
 		menuEdit.getItems().addAll(undo, redo);
 		menuInsert.getItems().addAll(image);
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> refs/remotes/origin/miscfix
 		// Declare the color picker
 		// final ColorPicker colorPicker = new ColorPicker();
 		final ColorPicker colorPicker = new ColorPicker(Color.BLACK);
@@ -510,6 +599,30 @@ public class JFXPaint extends Application {
 		textBtn.setPadding(Insets.EMPTY);
 		textBtn.setToggleGroup(tools);
 		textBtn.setUserData(5);
+<<<<<<< HEAD
+=======
+		// eraserBtn.setStyle("-fx-base: salmon;");
+
+		Image fillImage = new Image(getClass().getResourceAsStream("/icons/fill.png"));
+		ImageView scaledFill = new ImageView(fillImage);
+		scaledFill.setFitHeight(fitH);
+		scaledFill.setFitWidth(fitW);
+
+		ToggleButton fillBtn = new ToggleButton(null, scaledFill);
+		fillBtn.setPadding(Insets.EMPTY);
+		fillBtn.setToggleGroup(tools);
+		fillBtn.setUserData(4);
+
+		ToggleButton cropBtn = new ToggleButton(null, createIcon("/icons/crop.png"));
+		cropBtn.setPadding(Insets.EMPTY);
+		cropBtn.setToggleGroup(tools);
+		cropBtn.setUserData(7);
+
+		ToggleButton selectBtn = new ToggleButton(null, createIcon("/icons/select.png"));
+		selectBtn.setPadding(Insets.EMPTY);
+		selectBtn.setToggleGroup(tools);
+		selectBtn.setUserData(8);
+>>>>>>> refs/remotes/origin/miscfix
 
 		HBox toolBox = new HBox();
 
@@ -552,7 +665,8 @@ public class JFXPaint extends Application {
 	 * @param textBox:
 	 *            the textbox to be reset
 	 */
-	public void textReset(TextField textBox, ChoiceBox cb, Button bold, Button italic, Button add, Button sub, TextField fontSize) {
+	public void textReset(TextField textBox, ChoiceBox cb, Button bold, Button italic, Button add, Button sub,
+			TextField fontSize) {
 		textBox.clear();
 		textBox.setVisible(false);
 		cb.setVisible(false);
@@ -580,6 +694,7 @@ public class JFXPaint extends Application {
 
 	/**
 	 * Opens an image from file to be used
+	 * 
 	 * @return the open image if one is open, null if one is not
 	 */
 	public Image openImage() {
@@ -614,7 +729,11 @@ public class JFXPaint extends Application {
 		return null;
 	}
 
+<<<<<<< HEAD
 	public File getSaveLocation(Stage stage){
+=======
+	public File getSaveLocation(Stage stage) {
+>>>>>>> refs/remotes/origin/miscfix
 		FileChooser fileChooser = new FileChooser();
 
 		// Set extension filter

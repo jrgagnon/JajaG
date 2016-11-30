@@ -29,6 +29,8 @@ public class JFXCanvas {
 
 	Paint p = Color.BLACK;
 	protected int pressed = 0;
+	protected int firstUndo = 0;
+	protected int clearCanvas = 0;
 	protected boolean eraser = false;
 
 	public int tool = 0;
@@ -51,6 +53,9 @@ public class JFXCanvas {
 			// What to do on mouse click event
 			@Override
 			public void handle(MouseEvent event) {
+				
+				clearCanvas = 1;
+				
 				oldX = event.getX();
 				oldY = event.getY();
 				pressed = 1;
@@ -98,18 +103,13 @@ public class JFXCanvas {
 				Image image = writableImage; // WritableImage extends Image, but
 												// probly not sufficient
 				undoStack.push(image);
-			}
-		});
-
-		// Clear the Canvas when the user double-clicks
-		canvas.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent t) {
-				if (t.getClickCount() > 1) {
-					clear(gc, canvas);
+				if(firstUndo == 1){
+					firstUndo = 0;
 				}
 			}
 		});
+
+		
 	}
 
 	public void border(GraphicsContext gc, Canvas canvas) {
@@ -510,7 +510,20 @@ public class JFXCanvas {
 	}
 
 	public void undo(GraphicsContext gc, Canvas canvas) {
-		Image im = undoStack.pop();
+		Image im = null;
+		
+		//if this is the first undo pop twice
+		if(firstUndo == 0){
+			im = undoStack.pop();
+			redoStack.push(im);
+			if (im != null) {
+				im = undoStack.pop();
+			}
+			firstUndo = 1;
+		} else {
+			im = undoStack.pop();
+		}
+		
 		if (im != null) {
 			redoStack.push(im);
 			imageDraw(gc, canvas, im);
