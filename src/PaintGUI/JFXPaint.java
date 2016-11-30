@@ -15,7 +15,6 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -32,7 +31,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
@@ -43,19 +41,17 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-
 import java.io.File;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.stage.WindowEvent;
+
+import java.util.Optional;
 
 /**
  * Used to intialize JFX components currently for testing purposes
@@ -159,6 +155,8 @@ public class JFXPaint extends Application {
 			}
 		});
 		toolSizeTxt.setText("1.0");
+		
+		
 
 		Button addSize = new Button("+");
 		addSize.setPrefSize(30, 30);
@@ -367,6 +365,14 @@ public class JFXPaint extends Application {
 						addFont.setVisible(true);
 						fontSizeTxt.setVisible(true);
 						break;
+					case 7:
+						jc.tool = 7;
+						textReset(textBox, cb, bold, italic, subFont, addFont, fontSizeTxt);
+						break;
+					case 8:
+						jc.tool = 8;
+						textReset(textBox, cb, bold, italic, subFont, addFont, fontSizeTxt);
+						break;
 					default:
 						System.out.println("Default");
 						break;
@@ -400,11 +406,7 @@ public class JFXPaint extends Application {
 			@Override
 			public void handle(ActionEvent t) {
 
-<<<<<<< HEAD
 				if(file == null){
-=======
-				if (file == null) {
->>>>>>> refs/remotes/origin/miscfix
 					file = getSaveLocation(stage);
 				}
 
@@ -505,13 +507,10 @@ public class JFXPaint extends Application {
 
 				}
 			}
+			
 		});
 
-<<<<<<< HEAD
 		// Undo option 
-=======
-		// Undo option
->>>>>>> refs/remotes/origin/miscfix
 		MenuItem undo = new MenuItem("Undo");
 		undo.setAccelerator(KeyCombination.keyCombination("Ctrl+Z"));
 		undo.setOnAction(new EventHandler<ActionEvent>() {
@@ -554,11 +553,8 @@ public class JFXPaint extends Application {
 		menuEdit.getItems().addAll(undo, redo);
 		menuInsert.getItems().addAll(image);
 
-<<<<<<< HEAD
 
 
-=======
->>>>>>> refs/remotes/origin/miscfix
 		// Declare the color picker
 		// final ColorPicker colorPicker = new ColorPicker();
 		final ColorPicker colorPicker = new ColorPicker(Color.BLACK);
@@ -599,16 +595,8 @@ public class JFXPaint extends Application {
 		textBtn.setPadding(Insets.EMPTY);
 		textBtn.setToggleGroup(tools);
 		textBtn.setUserData(5);
-<<<<<<< HEAD
-=======
-		// eraserBtn.setStyle("-fx-base: salmon;");
-
-		Image fillImage = new Image(getClass().getResourceAsStream("/icons/fill.png"));
-		ImageView scaledFill = new ImageView(fillImage);
-		scaledFill.setFitHeight(fitH);
-		scaledFill.setFitWidth(fitW);
-
-		ToggleButton fillBtn = new ToggleButton(null, scaledFill);
+		
+		ToggleButton fillBtn = new ToggleButton(null, createIcon("/icons/fill.png"));
 		fillBtn.setPadding(Insets.EMPTY);
 		fillBtn.setToggleGroup(tools);
 		fillBtn.setUserData(4);
@@ -622,7 +610,6 @@ public class JFXPaint extends Application {
 		selectBtn.setPadding(Insets.EMPTY);
 		selectBtn.setToggleGroup(tools);
 		selectBtn.setUserData(8);
->>>>>>> refs/remotes/origin/miscfix
 
 		HBox toolBox = new HBox();
 
@@ -630,6 +617,9 @@ public class JFXPaint extends Application {
 		toolBox.getChildren().add(rectButton);
 		toolBox.getChildren().add(circleBtn);
 		toolBox.getChildren().add(eraserBtn);
+		toolBox.getChildren().add(fillBtn);
+		toolBox.getChildren().add(cropBtn);
+		toolBox.getChildren().add(selectBtn);
 		toolBox.getChildren().add(textBtn);
 
 		HBox tray = new HBox();
@@ -694,7 +684,6 @@ public class JFXPaint extends Application {
 
 	/**
 	 * Opens an image from file to be used
-	 * 
 	 * @return the open image if one is open, null if one is not
 	 */
 	public Image openImage() {
@@ -729,11 +718,7 @@ public class JFXPaint extends Application {
 		return null;
 	}
 
-<<<<<<< HEAD
 	public File getSaveLocation(Stage stage){
-=======
-	public File getSaveLocation(Stage stage) {
->>>>>>> refs/remotes/origin/miscfix
 		FileChooser fileChooser = new FileChooser();
 
 		// Set extension filter
