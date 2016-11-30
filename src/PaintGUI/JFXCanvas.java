@@ -284,7 +284,6 @@ public class JFXCanvas {
 	// Circle Tool Called when tool == 1
 	public void drawCircle(GraphicsContext gc, Canvas canvas) {
 		canvas.setCursor(Cursor.CROSSHAIR); // Default cursor
-
 		if (pressed == 0) {
 			// find lowest x and y, then gain shape size
 			double length;
@@ -345,15 +344,15 @@ public class JFXCanvas {
 			try{
 				float xValue = (float) oldX;
 				float yValue = (float) oldY;
-				Point2D start = new Point2D(xValue, yValue);			
-				WritableImage writableImage = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
+				Point2D start = new Point2D((int)xValue, (int)yValue);			
+				WritableImage writableImage = new WritableImage((int) canvas.getWidth()+1, (int) canvas.getHeight()+1);
 				canvas.snapshot(null, writableImage);		
 				Image image = writableImage;
 				PixelReader pr = image.getPixelReader();
 				Paint newColor = p;
 				Paint oldColor = pr.getColor((int)oldX, (int)oldY);
 				changeToolSize(gc, 1.00);
-				boolean[][] mark = new boolean[(int)canvas.getWidth()][(int)canvas.getHeight()];
+				boolean[][] mark = new boolean[(int)canvas.getWidth()+1][(int)canvas.getHeight()+1];
 				
 				floodFill(gc, canvas, mark, start, oldColor, newColor, pr);
 				
@@ -377,11 +376,11 @@ public class JFXCanvas {
         	
         	Point2D p = queue.remove();
         	//check point pos
-        	if (p.x > 0 && p.x < canvas.getWidth() - 1 && p.y > 0 && p.y < canvas.getHeight() -1){
+        	if (p.x > 0 && p.x < canvas.getWidth() - 1 && p.y > 0 && p.y < canvas.getHeight() - 1){
         		//paint point
         		if(mark[(int) p.x][(int) p.y]){continue;}
         		mark[(int) p.x][(int) p.y] = true;
-        		gc.strokeLine(p.x, p.y, p.x, p.y);
+        		gc.strokeLine(p.x, p.y, p.x+1, p.y+1);
         		
         		// test left
                 if (pr.getColor((int)p.x - 1, (int)p.y).equals(old))

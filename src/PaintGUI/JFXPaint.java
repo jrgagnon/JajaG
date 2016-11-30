@@ -249,7 +249,7 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 			@Override
 			public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight,
 					Number newSceneHeight) {
-				ch = ((double) newSceneHeight - 130.0);
+				ch = ((double) newSceneHeight - 140.0);
 				canvas.setHeight(ch);
 			}
 		});
@@ -319,7 +319,7 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 		// Beginning of Menu Bar Section
 		// Create Menu
 		MenuBar menuBar = new MenuBar();
-
+		menuBar.prefWidthProperty().bind(stage.widthProperty());
 		// --- File Menu Option
 		Menu menuFile = new Menu("File");
 		Menu menuEdit = new Menu("Edit");
@@ -517,8 +517,8 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 		selectBtn.setToggleGroup(tools);
 		selectBtn.setUserData(8);
 
-		HBox toolBox = new HBox();
-
+		HBox toolBox = new HBox(1);
+		//toolBox.setAlignment(Pos.CENTER);
 		toolBox.getChildren().add(drawLineBtn);
 		toolBox.getChildren().add(rectButton);
 		toolBox.getChildren().add(circleBtn);
@@ -530,7 +530,7 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 		
 
 		HBox tray = new HBox();
-
+		//tray.setAlignment(Pos.CENTER);
 		tray.getChildren().add(colorPicker);
 		tray.getChildren().add(subSize);
 		tray.getChildren().add(toolSizeTxt);
@@ -541,14 +541,15 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 		tray.getChildren().add(fontSizeTxt);
 		tray.getChildren().add(addFont);		
 
-		VBox vbox = new VBox();
+		VBox vbox = new VBox(5);
 
 		vbox.getChildren().add(menuBar);
 		vbox.getChildren().add(toolLabel);
 		vbox.getChildren().add(toolBox);
 		vbox.getChildren().add(canvas);
 		vbox.getChildren().add(tray);
-		vbox.setPadding(new Insets(0, 10, 0, 10));
+		//vbox.setAlignment(Pos.BASELINE_CENTER);
+		vbox.setPadding(new Insets(0, 0, 0, 0));
 
 		((Group) scene.getRoot()).getChildren().add(vbox);
 		stage.setScene(scene);
