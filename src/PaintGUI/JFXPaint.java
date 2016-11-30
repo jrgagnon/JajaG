@@ -318,7 +318,7 @@ public class JFXPaint extends Application {
 			@Override
 			public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight,
 					Number newSceneHeight) {
-				ch = ((double) newSceneHeight - 130.0);
+				ch = ((double) newSceneHeight - 140.0);
 
 				if(ch > saveH){
 					saveH = ch;
@@ -397,7 +397,7 @@ public class JFXPaint extends Application {
 		// Beginning of Menu Bar Section
 		// Create Menu
 		MenuBar menuBar = new MenuBar();
-
+		menuBar.prefWidthProperty().bind(stage.widthProperty());
 		// --- File Menu Option
 		Menu menuFile = new Menu("File");
 		Menu menuEdit = new Menu("Edit");
@@ -622,8 +622,8 @@ public class JFXPaint extends Application {
 		selectBtn.setToggleGroup(tools);
 		selectBtn.setUserData(8);
 
-		HBox toolBox = new HBox();
-
+		HBox toolBox = new HBox(1);
+		//toolBox.setAlignment(Pos.CENTER);
 		toolBox.getChildren().add(drawLineBtn);
 		toolBox.getChildren().add(rectButton);
 		toolBox.getChildren().add(circleBtn);
@@ -634,7 +634,7 @@ public class JFXPaint extends Application {
 		toolBox.getChildren().add(textBtn);
 
 		HBox tray = new HBox();
-
+		//tray.setAlignment(Pos.CENTER);
 		tray.getChildren().add(colorPicker);
 		tray.getChildren().add(subSize);
 		tray.getChildren().add(toolSizeTxt);
@@ -645,7 +645,7 @@ public class JFXPaint extends Application {
 		tray.getChildren().add(fontSizeTxt);
 		tray.getChildren().add(addFont);
 
-		VBox vbox = new VBox();
+		VBox vbox = new VBox(5);
 
 		vbox.getChildren().add(menuBar);
 		vbox.getChildren().add(toolLabel);
@@ -653,6 +653,7 @@ public class JFXPaint extends Application {
 		vbox.getChildren().add(sp);
 		vbox.getChildren().add(tray);
 		vbox.setPadding(new Insets(0, 10, 0, 10));
+		//vbox.setAlignment(Pos.BASELINE_CENTER);
 
 		((Group) scene.getRoot()).getChildren().add(vbox);
 		stage.setScene(scene);
