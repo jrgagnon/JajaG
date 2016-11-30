@@ -76,6 +76,14 @@ public class JFXPaint extends Application {
 		// Declare the canvas
 		JFXCanvas jc = new JFXCanvas();
 		Canvas canvas = new Canvas(cw, ch);
+		
+		// Set up a ScrollPane
+		ScrollPane sp = new ScrollPane();
+		sp.setContent(canvas);
+		
+		sp.setStyle("-fx-background: rgb(255,255,255);");
+		sp.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+	    sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 
 		Group group = new Group();
 		Scene scene = new Scene(group);
@@ -83,7 +91,7 @@ public class JFXPaint extends Application {
 		stage.setTitle("Penguin Paint");
 		stage.getIcons().add(new Image("/icons/penguin_2.png"));
 		stage.setWidth(800);
-		stage.setHeight(640);
+		stage.setHeight(650);
 		// stage.setMaximized(true);
 
 		URL url = this.getClass().getResource("JFX.css");
@@ -248,8 +256,11 @@ public class JFXPaint extends Application {
 					Number newSceneWidth) {
 				cw = ((double) newSceneWidth - 40.0);
 				
+				// Increase canvas size on window expansion
 				if (canvas.getWidth() < cw)
 					canvas.setWidth(cw);
+				
+				sp.setPrefWidth(cw);
 			}
 		});
 
@@ -261,6 +272,8 @@ public class JFXPaint extends Application {
 				
 				if (canvas.getHeight() < ch) 
 					canvas.setHeight(ch);
+				
+				sp.setPrefHeight(ch);
 			}
 		});
 
@@ -524,8 +537,8 @@ public class JFXPaint extends Application {
 		vbox.getChildren().add(menuBar);
 		vbox.getChildren().add(toolLabel);
 		vbox.getChildren().add(toolBox);
+		vbox.getChildren().add(sp);
 		vbox.getChildren().add(tray);
-		vbox.getChildren().add(canvas);
 		vbox.setPadding(new Insets(0, 10, 0, 10));
 
 		((Group) scene.getRoot()).getChildren().add(vbox);
