@@ -15,6 +15,7 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -27,6 +28,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollBar;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
@@ -36,6 +39,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -60,7 +65,7 @@ public class JFXPaint extends Application {
 	public double fitH = 40.0;
 
 	public double toolSize = 1.00;
-	
+
 	public File file = null;
 
 	public static void main(String[] args) {
@@ -68,8 +73,19 @@ public class JFXPaint extends Application {
 	}
 
 	public void start(Stage stage) {
+		// Declare the canvas
+		JFXCanvas jc = new JFXCanvas();
+		Canvas canvas = new Canvas(cw, ch);
+		
+		// Set up a ScrollPane
+		ScrollPane sp = new ScrollPane();
+		sp.setContent(canvas);
+		sp.setStyle("-fx-background: rgb(255,255,255);");
+		sp.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+	    sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 
-		Scene scene = new Scene(new Group());
+		Group group = new Group();
+		Scene scene = new Scene(group);
 		stage.setTitle("JFXPaint");
 		stage.setTitle("Penguin Paint");
 		stage.getIcons().add(new Image("/icons/penguin_2.png"));
@@ -81,9 +97,6 @@ public class JFXPaint extends Application {
 		String css = url.toExternalForm();
 		scene.getStylesheets().add(css);
 
-		// Declare the canvas
-		JFXCanvas jc = new JFXCanvas();
-		Canvas canvas = new Canvas(cw, ch);
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		jc.draw(gc, canvas);
 
@@ -142,10 +155,10 @@ public class JFXPaint extends Application {
 		textBox.setTooltip(textTooltip);
 		textBox.setVisible(false);
 
-final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Roman" };
+		final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Roman" };
 
 		ChoiceBox cb = new ChoiceBox(FXCollections.observableArrayList("Arial", "Courier", "Serif", "Times New Roman"));
-		
+
 		cb.setPrefSize(90, 30);
 		cb.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 
@@ -174,7 +187,7 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 			}
 		});
 		bold.setVisible(false);
-		
+
 		Button italic = new Button("I");
 		italic.setPrefSize(30, 30);
 		italic.setOnAction(new EventHandler<ActionEvent>() {
@@ -191,7 +204,7 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 			}
 		});
 		italic.setVisible(false);
-		
+
 		NumberTextField fontSizeTxt = new NumberTextField();
 		fontSizeTxt.setPrefSize(50, 30);
 		fontSizeTxt.setAlignment(Pos.BASELINE_RIGHT);
@@ -241,7 +254,12 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 			public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth,
 					Number newSceneWidth) {
 				cw = ((double) newSceneWidth - 40.0);
-				canvas.setWidth(cw);
+				
+				// Increase canvas size on window expansion
+				if (canvas.getWidth() < cw)
+					canvas.setWidth(cw);
+				
+				sp.setPrefWidth(cw);
 			}
 		});
 
@@ -250,9 +268,14 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 			public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight,
 					Number newSceneHeight) {
 				ch = ((double) newSceneHeight - 130.0);
-				canvas.setHeight(ch);
+				
+				if (canvas.getHeight() < ch) 
+					canvas.setHeight(ch);
+				
+				sp.setPrefHeight(ch);
 			}
 		});
+
 
 		// Group that Contains all the toggle buttons, only one or no buttons in
 		// this group can be selected
@@ -298,14 +321,6 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 						addFont.setVisible(true);
 						fontSizeTxt.setVisible(true);
 						break;
-					case 7:
-						jc.tool = 7;
-						textReset(textBox, cb, bold, italic, subFont, addFont, fontSizeTxt);
-						break;
-					case 8:
-						jc.tool = 8;
-						textReset(textBox, cb, bold, italic, subFont, addFont, fontSizeTxt);
-						break;
 					default:
 						System.out.println("Default");
 						break;
@@ -333,12 +348,12 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 		// If non was selected has you choose a location and name
 		MenuItem save = new MenuItem("Save");
 		save.setAccelerator(KeyCombination.keyCombination("Ctrl+S"));
-		
+
 		save.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent t) {
-				
+
 				if(file == null){
 					file = getSaveLocation(stage);
 				}
@@ -356,18 +371,18 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 			}
 
 		});
-		
+
 		// Saves the canvas as a new file
 		// Opens the dialog for you to choose location and name
 		MenuItem saveAs = new MenuItem("Save As");
-				
+
 		saveAs.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent t) {
-				
+
 				file = getSaveLocation(stage);
-				
+
 				if (file != null) {
 					try {
 						WritableImage writableImage = new WritableImage((int) cw, (int) ch);
@@ -381,7 +396,7 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 			}
 
 		});
-		
+
 		// Open Option
 		MenuItem open = new MenuItem("Open");
 
@@ -409,7 +424,7 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 				jc.clear(gc, canvas);
 			}
 		});
-		
+
 		// Undo option 
 		MenuItem undo = new MenuItem("Undo");
 		undo.setAccelerator(KeyCombination.keyCombination("Ctrl+Z"));
@@ -420,7 +435,7 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 				jc.undo(gc, canvas);
 			}
 		});
-		
+
 		// Redo option
 		MenuItem redo = new MenuItem("Redo");
 		redo.setAccelerator(KeyCombination.keyCombination("Ctrl+Y"));
@@ -431,7 +446,7 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 				jc.redo(gc, canvas);
 			}
 		});
-		
+
 		MenuItem image = new MenuItem("image");
 		image.setAccelerator(KeyCombination.keyCombination("Ctrl+I"));
 		image.setOnAction(new EventHandler<ActionEvent>() {
@@ -452,9 +467,9 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 		menuFile.getItems().addAll(clear, open, save, saveAs);
 		menuEdit.getItems().addAll(undo, redo);
 		menuInsert.getItems().addAll(image);
-		
-		
-		
+
+
+
 		// Declare the color picker
 		// final ColorPicker colorPicker = new ColorPicker();
 		final ColorPicker colorPicker = new ColorPicker(Color.BLACK);
@@ -475,47 +490,26 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 		drawLineBtn.setToggleGroup(tools);
 		drawLineBtn.setUserData(0);
 		drawLineBtn.setSelected(true);
-		
+
 		ToggleButton rectButton = new ToggleButton(null, createIcon("/icons/square.png"));
 		rectButton.setPadding(Insets.EMPTY);
 		rectButton.setToggleGroup(tools);
 		rectButton.setUserData(1);
-		
+
 		ToggleButton circleBtn = new ToggleButton(null, createIcon("/icons/circle.png"));
 		circleBtn.setPadding(Insets.EMPTY);
 		circleBtn.setToggleGroup(tools);
 		circleBtn.setUserData(2);
-		
+
 		ToggleButton eraserBtn = new ToggleButton(null, createIcon("/icons/eraser.png"));
 		eraserBtn.setPadding(Insets.EMPTY);
 		eraserBtn.setToggleGroup(tools);
 		eraserBtn.setUserData(3);
-		
+
 		ToggleButton textBtn = new ToggleButton(null, createIcon("/icons/text.png"));
 		textBtn.setPadding(Insets.EMPTY);
 		textBtn.setToggleGroup(tools);
 		textBtn.setUserData(5);
-		//eraserBtn.setStyle("-fx-base: salmon;");
-		
-		Image fillImage = new Image(getClass().getResourceAsStream("/icons/fill.png"));
-		ImageView scaledFill = new ImageView(fillImage);
-		scaledFill.setFitHeight(fitH);
-		scaledFill.setFitWidth(fitW);
-
-		ToggleButton fillBtn = new ToggleButton(null, scaledFill);
-		fillBtn.setPadding(Insets.EMPTY);
-		fillBtn.setToggleGroup(tools);
-		fillBtn.setUserData(4);
-		
-		ToggleButton cropBtn = new ToggleButton(null, createIcon("/icons/crop.png"));
-		cropBtn.setPadding(Insets.EMPTY);
-		cropBtn.setToggleGroup(tools);
-		cropBtn.setUserData(7);
-		
-		ToggleButton selectBtn = new ToggleButton(null, createIcon("/icons/select.png"));
-		selectBtn.setPadding(Insets.EMPTY);
-		selectBtn.setToggleGroup(tools);
-		selectBtn.setUserData(8);
 
 		HBox toolBox = new HBox();
 
@@ -523,11 +517,7 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 		toolBox.getChildren().add(rectButton);
 		toolBox.getChildren().add(circleBtn);
 		toolBox.getChildren().add(eraserBtn);
-		toolBox.getChildren().add(fillBtn);
-		toolBox.getChildren().add(cropBtn);
-		toolBox.getChildren().add(selectBtn);
 		toolBox.getChildren().add(textBtn);
-		
 
 		HBox tray = new HBox();
 
@@ -539,20 +529,21 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 		tray.getChildren().add(cb);
 		tray.getChildren().add(subFont);
 		tray.getChildren().add(fontSizeTxt);
-		tray.getChildren().add(addFont);		
+		tray.getChildren().add(addFont);
 
 		VBox vbox = new VBox();
 
 		vbox.getChildren().add(menuBar);
 		vbox.getChildren().add(toolLabel);
 		vbox.getChildren().add(toolBox);
-		vbox.getChildren().add(canvas);
+		vbox.getChildren().add(sp);
 		vbox.getChildren().add(tray);
 		vbox.setPadding(new Insets(0, 10, 0, 10));
 
 		((Group) scene.getRoot()).getChildren().add(vbox);
 		stage.setScene(scene);
 		stage.show();
+
 	}
 
 	/**
@@ -622,7 +613,7 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 
 		return null;
 	}
-	
+
 	public File getSaveLocation(Stage stage){
 		FileChooser fileChooser = new FileChooser();
 
@@ -633,7 +624,7 @@ final String[] fonts = new String[] { "Arial", "Courier", "Serif", "Times New Ro
 		FileChooser.ExtensionFilter extFilterpng = new FileChooser.ExtensionFilter("png files (*.png)", "*.png",
 				"*.PNG");
 		fileChooser.getExtensionFilters().addAll(extFilterjpg, extFilterpng);
-		
+
 		return fileChooser.showSaveDialog(stage);
 	}
 }
