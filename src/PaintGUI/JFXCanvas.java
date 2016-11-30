@@ -30,6 +30,7 @@ public class JFXCanvas {
 	Paint p = Color.BLACK;
 	protected int pressed = 0;
 	protected int firstUndo = 0;
+	protected int clearCanvas = 0;
 	protected boolean eraser = false;
 
 	public int tool = 0;
@@ -52,6 +53,9 @@ public class JFXCanvas {
 			// What to do on mouse click event
 			@Override
 			public void handle(MouseEvent event) {
+				
+				clearCanvas = 1;
+				
 				oldX = event.getX();
 				oldY = event.getY();
 				pressed = 1;

@@ -96,36 +96,39 @@ public class JFXPaint extends Application {
 
 		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			public void handle(WindowEvent we) {
-				Alert alert = new Alert(AlertType.CONFIRMATION);
-				alert.setTitle("Unsaved Changes");
-				alert.setHeaderText("You have unsaved changes would you like to save?");
-				// alert.setContentText("Choose your option.");
+				if (jc.clearCanvas == 1) {
+					Alert alert = new Alert(AlertType.CONFIRMATION);
 
-				ButtonType buttonTypeOne = new ButtonType("Yes");
-				ButtonType buttonTypeTwo = new ButtonType("No");
-				
-				alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo);
+					alert.setTitle("Unsaved Changes");
+					alert.setHeaderText("You have unsaved changes would you like to save?");
+					// alert.setContentText("Choose your option.");
 
-				Optional<ButtonType> result = alert.showAndWait();
-				if (result.get() == buttonTypeOne) {
-					if (file == null) {
-						file = getSaveLocation(stage);
-					}
+					ButtonType buttonTypeOne = new ButtonType("Yes");
+					ButtonType buttonTypeTwo = new ButtonType("No");
 
-					if (file != null) {
-						try {
-							WritableImage writableImage = new WritableImage((int) cw, (int) ch);
-							canvas.snapshot(null, writableImage);
-							RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
-							ImageIO.write(renderedImage, "png", file);
-						} catch (IOException ex) {
-							Logger.getLogger(JFXPaint.class.getName()).log(Level.SEVERE, null, ex);
+					alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo);
+
+					Optional<ButtonType> result = alert.showAndWait();
+					if (result.get() == buttonTypeOne) {
+						if (file == null) {
+							file = getSaveLocation(stage);
 						}
-					}
-				} else if (result.get() == buttonTypeTwo) {
-					// ... user chose "Two"
-				} else {
 
+						if (file != null) {
+							try {
+								WritableImage writableImage = new WritableImage((int) cw, (int) ch);
+								canvas.snapshot(null, writableImage);
+								RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
+								ImageIO.write(renderedImage, "png", file);
+							} catch (IOException ex) {
+								Logger.getLogger(JFXPaint.class.getName()).log(Level.SEVERE, null, ex);
+							}
+						}
+					} else if (result.get() == buttonTypeTwo) {
+						// ... user chose "Two"
+					} else {
+
+					}
 				}
 			}
 		});
@@ -481,7 +484,7 @@ public class JFXPaint extends Application {
 					jc.clear(gc, canvas);
 				} else {
 
-				}				
+				}
 			}
 		});
 
