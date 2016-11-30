@@ -80,7 +80,6 @@ public class JFXPaint extends Application {
 		// Set up a ScrollPane
 		ScrollPane sp = new ScrollPane();
 		sp.setContent(canvas);
-		
 		sp.setStyle("-fx-background: rgb(255,255,255);");
 		sp.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 	    sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
@@ -91,7 +90,7 @@ public class JFXPaint extends Application {
 		stage.setTitle("Penguin Paint");
 		stage.getIcons().add(new Image("/icons/penguin_2.png"));
 		stage.setWidth(800);
-		stage.setHeight(650);
+		stage.setHeight(600);
 		// stage.setMaximized(true);
 
 		URL url = this.getClass().getResource("JFX.css");
