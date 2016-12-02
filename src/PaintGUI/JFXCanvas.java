@@ -267,7 +267,12 @@ public class JFXCanvas {
 	public void drawRect(GraphicsContext gc, Canvas canvas) {
 		canvas.setCursor(Cursor.CROSSHAIR); // Default cursor
 
-		if (pressed == 0) {
+		//draw initial dot when clicked so user knows where line will start
+		if(pressed == 1){
+			gc.strokeLine(oldX, oldY, oldX, oldY);
+		}
+		
+		else if (pressed == 0) {
 			// find lowest x and y, then gain shape size
 			double length;
 			double width;
