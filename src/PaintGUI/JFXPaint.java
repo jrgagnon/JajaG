@@ -388,7 +388,7 @@ public class JFXPaint extends Application {
 						jc.tool = 9;
 						textReset(textBox, cb, bold, italic, subFont, addFont, fontSizeTxt);
 					default:
-						System.out.println("Default");
+						//System.out.println("Default");
 						break;
 
 					}

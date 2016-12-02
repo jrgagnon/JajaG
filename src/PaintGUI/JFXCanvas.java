@@ -166,7 +166,7 @@ public class JFXCanvas {
 			drawStraightLine(gc, canvas);
 			break;
 		default:
-			System.out.println("Default");
+			//System.out.println("Default");
 			break;
 
 		}
@@ -379,8 +379,8 @@ public class JFXCanvas {
 				
 			}
 			catch(Exception ex){
-				System.out.println(ex.getMessage());
-				System.out.println("hi");
+				//System.out.println(ex.getMessage());
+				//System.out.println("hi");
 			}
 //			
 		}
@@ -454,7 +454,7 @@ public class JFXCanvas {
 			gc.setLineWidth(100.0);
 			break;
 		default:
-			System.out.println("Default");
+			//System.out.println("Default");
 			break;
 
 		}
