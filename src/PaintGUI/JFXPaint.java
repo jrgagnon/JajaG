@@ -384,6 +384,9 @@ public class JFXPaint extends Application {
 						jc.tool = 8;
 						textReset(textBox, cb, bold, italic, subFont, addFont, fontSizeTxt);
 						break;
+					case 9:
+						jc.tool = 9;
+						textReset(textBox, cb, bold, italic, subFont, addFont, fontSizeTxt);
 					default:
 						System.out.println("Default");
 						break;
@@ -622,16 +625,22 @@ public class JFXPaint extends Application {
 		selectBtn.setPadding(Insets.EMPTY);
 		selectBtn.setToggleGroup(tools);
 		selectBtn.setUserData(8);
+		
+		ToggleButton straightLineBtn = new ToggleButton(null, createIcon("/icons/pen.png"));
+		straightLineBtn.setPadding(Insets.EMPTY);
+		straightLineBtn.setToggleGroup(tools);
+		straightLineBtn.setUserData(9);
 
 		HBox toolBox = new HBox(1);
 
 		toolBox.getChildren().add(drawLineBtn);
+		toolBox.getChildren().add(straightLineBtn);
 		toolBox.getChildren().add(rectButton);
 		toolBox.getChildren().add(circleBtn);
 		toolBox.getChildren().add(eraserBtn);
 		toolBox.getChildren().add(fillBtn);
 		toolBox.getChildren().add(cropBtn);
-		toolBox.getChildren().add(selectBtn);
+		toolBox.getChildren().add(selectBtn);		
 		toolBox.getChildren().add(textBtn);
 
 		HBox tray = new HBox();

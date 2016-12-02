@@ -162,6 +162,9 @@ public class JFXCanvas {
 		case 8:
 			selectImage(gc, canvas);
 			break;
+		case 9:
+			drawStraightLine(gc, canvas);
+			break;
 		default:
 			System.out.println("Default");
 			break;
@@ -245,6 +248,19 @@ public class JFXCanvas {
 			gc.stroke();
 		}
 
+	}
+	
+	public void drawStraightLine(GraphicsContext gc, Canvas canvas){
+		canvas.setCursor(Cursor.CROSSHAIR); // Default cursor
+		
+		//draw initial dot when clicked so user knows where line will start
+		if(pressed == 1){
+			gc.strokeLine(oldX, oldY, oldX, oldY);
+		}
+		//draw line from old x,y to end x,y
+		else if(pressed == 0){
+			gc.strokeLine(oldX, oldY, endX, endY);
+		}
 	}
 
 	// Rectangle Tool Called when tool == 1
